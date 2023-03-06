@@ -15,8 +15,8 @@ public class CouponsPhase2Application {
 
 	public static void main(String[] args) throws Exception {
 		ApplicationContext ctx = SpringApplication.run(CouponsPhase2Application.class, args);
-		AdminTester adminTester1  = ctx.getBean(AdminTester.class);
-		adminTester1.test();
+//		AdminTester adminTester1  = ctx.getBean(AdminTester.class);
+//		adminTester1.test();
 
 
 		CompanyTester companyTester =ctx.getBean(CompanyTester.class);
