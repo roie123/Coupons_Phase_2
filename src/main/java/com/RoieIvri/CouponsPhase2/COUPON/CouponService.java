@@ -1,6 +1,7 @@
 package com.RoieIvri.CouponsPhase2.COUPON;
 
 import com.RoieIvri.CouponsPhase2.COMPANY.Company;
+import com.RoieIvri.CouponsPhase2.CUSTOMER.Customer;
 import com.RoieIvri.CouponsPhase2.CategoryType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +76,11 @@ else throw new CouponException("COULD NOT UPDATE COUPON :: COUPON NOT FOUND EXCE
 
     public List<Coupon> getCouponsByMaxPriceAndCompanyId(Long maxPrice, Long CompanyId){
         return couponRepo.getCouponsByMaxPriceAndCompany(maxPrice,CompanyId);
+    }
+
+
+    public boolean existById(Long couponId){
+        return couponRepo.existsById(couponId);
     }
 
 }
