@@ -9,6 +9,9 @@ import java.util.List;
 public interface CustomerRepo extends JpaRepository<Customer,Long> {
 
     boolean existsByEmail(String email);
+    boolean existsByEmailAndPassword(String email,String password);
+
+    Customer getCustomerByEmailAndPassword(String email,String password);
     List<Customer> getAllByisActiveIsTrue();
 
 }
