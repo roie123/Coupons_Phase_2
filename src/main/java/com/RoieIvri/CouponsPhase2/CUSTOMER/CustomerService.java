@@ -4,6 +4,7 @@ import com.RoieIvri.CouponsPhase2.COMPANY.Company;
 import com.RoieIvri.CouponsPhase2.COUPON.Coupon;
 import com.RoieIvri.CouponsPhase2.COUPON.CouponException;
 import com.RoieIvri.CouponsPhase2.COUPON.CouponService;
+import com.RoieIvri.CouponsPhase2.CategoryType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Modifying;
@@ -105,4 +106,50 @@ public class CustomerService {
         }
         throw new CustomerException("CUSTOMER OR COUPON  NOT FOUND BY ID ");
     }
+
+
+
+
+    @Transactional
+    public List<Coupon> getCustomerCoupons(Long customerId) throws CustomerException {
+        Customer customer;
+        customer= customerRepo.existsById(customerId) ? customerRepo.findById(customerId).get() : null;
+        if (customer!=null && customer.getCoupons().size()> -1 ){
+            return  customer.getCoupons();
+        }
+        throw new CustomerException("CUSTOMER NOT FOUND BY ID ");
+    }
+
+
+    public List<Coupon> getCustomerCouponsByStoredProcedure(Long customerId){
+
+        return couponService.getCustomerCouponByStoredProcedure(customerId);
+
+
+
+    }
+
+    public List<Coupon> getCustomerCouponsByCategory(Long customerId, CategoryType categoryType){
+        return couponService.getCustomerCouponsByCategory(customerId,categoryType);
+    }
+
+    public List<Coupon> getCustomerCouponsUpToPrice(Long customerId, Long maxPrice){
+        return couponService.getCustomerCouponsUpToPrice(customerId,maxPrice);
+    }
+    @Transactional
+    public void getCustomerDetails(Long customerId){
+        if (customerRepo.existsById(customerId)){
+            Customer customer = customerRepo.findById(customerId).get();
+            System.out.println("CUSTOMER DETAILS ==>> ");
+            System.out.println("CUSTOMER NAME    ==>" + customer.getFirstName()+customer.getLastName());
+            System.out.println("CUSTOMER EMAIL   ==> "+customer.getEmail());
+            System.out.println("CUSTOMER COUPONS ==> ");
+            for (int i = 0; i < customer.getCoupons().size(); i++) {
+                System.out.println((i+1)+" "+ customer.getCoupons().get(i));
+
+            }
+
+        }
+    }
+
 }
