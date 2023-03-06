@@ -83,4 +83,17 @@ else throw new CouponException("COULD NOT UPDATE COUPON :: COUPON NOT FOUND EXCE
         return couponRepo.existsById(couponId);
     }
 
+
+public List<Coupon> getCustomerCouponByStoredProcedure(Long customerId){
+        return couponRepo.getCustomerCoupons(customerId);
+}
+
+
+public List<Coupon> getCustomerCouponsByCategory(Long customerId, CategoryType categoryType){
+        return couponRepo.getCustomerCouponByOrdinalCategory(customerId,categoryType.ordinal());
+}
+
+public List<Coupon> getCustomerCouponsUpToPrice(Long customerId,Long maxPrice){
+        return couponRepo.getCustomerCouponsUpToPrice(customerId,maxPrice);
+}
 }
