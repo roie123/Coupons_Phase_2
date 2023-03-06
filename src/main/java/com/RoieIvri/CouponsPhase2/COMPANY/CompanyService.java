@@ -101,7 +101,7 @@ public class CompanyService {
             updateObject(company, companyId);
             return true;
 
-        } else throw new ComapnyException("COULD NOT ADD COUPON :: COUPON'S TITLE ALREADY TAKEN  ");
+        } else throw new ComapnyException("COULD NOT ADD COUPON :: COUPON'S TITLE ALREADY TAKEN IN THAT COMPANY  ");
 
 
     }
