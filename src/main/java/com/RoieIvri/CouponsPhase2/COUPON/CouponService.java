@@ -96,4 +96,7 @@ public List<Coupon> getCustomerCouponsByCategory(Long customerId, CategoryType c
 public List<Coupon> getCustomerCouponsUpToPrice(Long customerId,Long maxPrice){
         return couponRepo.getCustomerCouponsUpToPrice(customerId,maxPrice);
 }
+public void deleteOutdatedAndNullCoupons(){
+        couponRepo.deleteAllNullAndOutDatedCoupons();
+}
 }
