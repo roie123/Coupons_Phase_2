@@ -26,7 +26,9 @@ public class CompanyService {
 
     public boolean login(String email, String password) throws Exception {
         if (companyRepo.existsByEmailAndPassword(email, password)) {
-            selectedCompanyId = companyRepo.getCompanyByEmailAndPassword(email, password).getId();
+            Company loggedIn = companyRepo.getCompanyByEmailAndPassword(email, password);
+            selectedCompanyId=loggedIn.getId();
+            System.out.println("LOGGED IN COMPANY ==> "+ loggedIn);
             return true;
         }
         ;
