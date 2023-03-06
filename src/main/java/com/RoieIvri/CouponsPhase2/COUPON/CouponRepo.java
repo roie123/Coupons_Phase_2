@@ -31,4 +31,7 @@ public interface CouponRepo extends JpaRepository<Coupon,Long> {
 
     @Procedure("getCustomerCouponsUpToPrice")
     List<Coupon> getCustomerCouponsUpToPrice(Long customerId, Long maxPrice);
+
+    @Procedure("deleteOutdatedAndNullCoupons")
+    void deleteAllNullAndOutDatedCoupons();
 }
