@@ -23,4 +23,12 @@ public interface CouponRepo extends JpaRepository<Coupon,Long> {
     @Procedure("deleteCouponPurchaseHistory")
     public void deleteCouponPurchaseHistory(Long couponId);
 
+    @Procedure("getCustomerCoupons")
+    List<Coupon> getCustomerCoupons(Long customerId);
+
+    @Procedure("getCustomerCouponsByCategory")
+    List<Coupon> getCustomerCouponByOrdinalCategory(Long customerId, int categoryInOrdinal);
+
+    @Procedure("getCustomerCouponsUpToPrice")
+    List<Coupon> getCustomerCouponsUpToPrice(Long customerId, Long maxPrice);
 }
