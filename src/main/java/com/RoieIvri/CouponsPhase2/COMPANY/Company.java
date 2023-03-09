@@ -3,10 +3,7 @@ package com.RoieIvri.CouponsPhase2.COMPANY;
 import com.RoieIvri.CouponsPhase2.COUPON.Coupon;
 import com.RoieIvri.CouponsPhase2.COUPON.CouponRepo;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +13,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "companies")
 public class Company {
     @Id
@@ -31,7 +29,7 @@ public class Company {
 
     private boolean isActive = true;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "company")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "company",orphanRemoval = true)
     private List<Coupon> couponList = new ArrayList<>();
 
 
