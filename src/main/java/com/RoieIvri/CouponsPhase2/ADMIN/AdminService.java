@@ -24,7 +24,6 @@ public class AdminService {
 
     @Autowired
     private final CustomerService customerService;
-    private final CompanyRepo companyRepo;
 
     public boolean isLoginValid(String email,String password){
         if (email.equals("admin@admin.com") && password.equals("admin")){
@@ -35,9 +34,9 @@ public class AdminService {
     }
 
 
-    public void addCompany(Company company ) throws Exception {
+    public Company addCompany(Company company ) throws Exception {
     if (companyService.isCompanyValidToBeAdded(company)){
-        companyService.addObject(company);
+      return  companyService.addObject(company);
     }
     else throw new AdminException("COMPANY COULD NOT BE ADDED :: NOT VALID VALUES");
     }
