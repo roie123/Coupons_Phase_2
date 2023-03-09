@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,11 +24,9 @@ public class CustomerService {
 
     private final CouponService couponService;
 
-    public Customer login(String email, String password) throws Exception {
+    public boolean login(String email, String password) throws Exception {
         if (customerRepo.existsByEmailAndPassword(email,password)){
-            Customer customer = customerRepo.getCustomerByEmailAndPassword(email,password);
-            System.out.println("LOGGED IN CUSTOMER ===> "+customer);
-            return customer;
+            return true;
         }
         throw new CustomerException("CUSTOMER LOGIN VALUES ARE INCORRECT ");
     }
@@ -59,11 +58,6 @@ public class CustomerService {
     public Customer getOneObject(Long objectId) throws Exception {
         if (customerRepo.existsById(objectId)) {
             Customer customer = customerRepo.findById(objectId).get();
-            customer.getCoupons().forEach(coupon -> {
-                if (!coupon.isActive()){
-                    customer.getCoupons().remove(coupon);
-                }
-            });
             return customer;
         }
         throw new CustomerException("CUSTOMER NOT FOUND BY ID");
@@ -83,17 +77,24 @@ public class CustomerService {
 
 @Transactional
     public void purchaseCoupon(Long couponId,Long customerId) throws Exception {
-        Customer customer ;
-        customer = customerRepo.existsById(couponId) ? customerRepo.findById(customerId).get() : null;
+        Customer customer = new Customer();
+        if (customerRepo.existsById(customerId)){
+            customer= customerRepo.findById(customerId).get();
 
-    for (Coupon c :
-            customer.getCoupons()) {
-        if (c.getId().intValue()==couponId.intValue()){
-            throw new CustomerException("CANT PURCHASE AN EXISTING COUPON");
         }
 
-    }
 
+
+        if (customer!=null&&  customer.getCoupons().size()> -1){
+            for (Coupon c :
+                    customer.getCoupons()) {
+                if (c.getId().intValue()==couponId.intValue()){
+                    throw new CustomerException("CANT PURCHASE AN EXISTING COUPON");
+                }
+
+            }
+
+        }
         if (customer!=null && customer.getCoupons().size()> -1 && couponService.existById(couponId) ){
             Coupon coupon = couponService.getOneObject(couponId);
             LocalDate localDate = LocalDate.now();
@@ -140,7 +141,9 @@ public class CustomerService {
     public void getCustomerDetails(Long customerId){
         if (customerRepo.existsById(customerId)){
             Customer customer = customerRepo.findById(customerId).get();
-            System.out.println("CUSTOMER DETAILS ==>> ");
+            System.out.println();
+            System.out.println("     CUSTOMER DETAILS ==>> ");
+            System.out.println();
             System.out.println("CUSTOMER NAME    ==>" + customer.getFirstName()+customer.getLastName());
             System.out.println("CUSTOMER EMAIL   ==> "+customer.getEmail());
             System.out.println("CUSTOMER COUPONS ==> ");
@@ -151,5 +154,9 @@ public class CustomerService {
 
         }
     }
+
+
+
+
 
 }
