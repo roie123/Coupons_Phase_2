@@ -18,13 +18,11 @@ public class CouponService  {
     @Autowired
     private final CouponRepo couponRepo;
 
-    public boolean isObjectExist(String email, String password) throws Exception {
-        return false;
-    }
+
 
     public Coupon addObject(Coupon coupon) throws Exception {
 
-        return coupon;
+        return couponRepo.save(coupon);
     }
 
     @Transactional
@@ -43,21 +41,16 @@ else throw new CouponException("COULD NOT UPDATE COUPON :: COUPON NOT FOUND EXCE
         if (couponRepo.existsById(objectId)){
             couponRepo.deleteCouponPurchaseHistory(objectId);
             couponRepo.deleteById(objectId);
+            return;
         }
         throw new CouponException("COUPON NOT FOUND BY ID ");
     }
 
-    public List<Coupon> getAllObjects() throws Exception {
-        return null;
-    }
 
     public Coupon getOneObject(Long objectId) throws Exception {
         if (couponRepo.existsById(objectId)){
             Coupon coupon =couponRepo.findById(objectId).get();
-            if (coupon.isActive()){
-                return coupon;
-            }
-            else throw new CouponException("COULD NOT GET COUPON :: COUPON WAS DELETED ");
+            return coupon;
         }
         throw new CouponException("COULD NOT GET COUPON :: COUPON WAS NEVER REGISTERD");
     }
@@ -88,15 +81,23 @@ public List<Coupon> getCustomerCouponByStoredProcedure(Long customerId){
         return couponRepo.getCustomerCoupons(customerId);
 }
 
-
+@Transactional
 public List<Coupon> getCustomerCouponsByCategory(Long customerId, CategoryType categoryType){
         return couponRepo.getCustomerCouponByOrdinalCategory(customerId,categoryType.ordinal());
 }
+    @Transactional
 
 public List<Coupon> getCustomerCouponsUpToPrice(Long customerId,Long maxPrice){
         return couponRepo.getCustomerCouponsUpToPrice(customerId,maxPrice);
 }
+    @Transactional
 public void deleteOutdatedAndNullCoupons(){
         couponRepo.deleteAllNullAndOutDatedCoupons();
 }
+
+
+
+
+
 }
+
