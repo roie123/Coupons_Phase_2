@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "customers")
 @ToString
+@Builder
 public class Customer {
 
     @Id
