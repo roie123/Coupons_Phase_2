@@ -13,6 +13,7 @@ import java.util.StringTokenizer;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 public class Coupon {
 
     @Id
@@ -33,7 +34,7 @@ public class Coupon {
     private CategoryType category = CategoryType.StupidFace;
 
 
-    @ManyToOne
+    @ManyToOne()
     @ToString.Exclude
     @JoinColumn
     private Company company;
@@ -72,7 +73,7 @@ public class Coupon {
                 ", amount=" + amount +
                 ", price=" + price +
                 ", image='" + image + '\'' +
-                ", isActive=" + isActive +
+                ", category" + category +
                 '}';
     }
 }
