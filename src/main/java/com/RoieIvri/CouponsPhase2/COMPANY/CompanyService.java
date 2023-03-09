@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +29,6 @@ public class CompanyService {
         if (companyRepo.existsByEmailAndPassword(email, password)) {
             Company loggedIn = companyRepo.getCompanyByEmailAndPassword(email, password);
             selectedCompanyId=loggedIn.getId();
-            System.out.println("LOGGED IN COMPANY ==> "+ loggedIn);
             return true;
         }
         ;
@@ -58,10 +58,8 @@ public class CompanyService {
     @Transactional
     public void deleteObject(Long objectId) throws Exception {
         if (companyRepo.findById(objectId).isPresent()) {
-            Company c = companyRepo.findById(objectId).get();
-            c.setActive(false);
-            c.getCouponList().forEach(coupon -> coupon.setActive(false)); //setting all coupons to false
-            updateObject(c, c.getId());
+           companyRepo.deleteById(objectId);
+           return;
         } else throw new ComapnyException("COULD NOT DELETE COMPANY :: COMPANY NOT FOUND EXCEPTION");
     }
 
@@ -72,11 +70,26 @@ public class CompanyService {
     public Company getOneObject(Long objectId) throws Exception {
         if (companyRepo.findById(objectId).isPresent()) {
             Company company = companyRepo.findById(objectId).get();
-            System.out.println(company);
-            if (company.isActive()) {
+                return companyRepo.findById(objectId).get();
+
+
+
+
+        }
+        throw new ComapnyException("COMPANY NOT FOUND EXCEPTION ");
+
+
+    }
+    @Transactional
+    public Company getOneObjectWIthLists(Long objectId) throws Exception {
+        if (companyRepo.findById(objectId).isPresent()) {
+            Company company = companyRepo.findById(objectId).get();
+            if (company.getCouponList().size()> -1 ){
                 return companyRepo.findById(objectId).get();
 
             }
+
+
 
 
         }
@@ -112,14 +125,21 @@ public class CompanyService {
             coupon.setId(couponId);
             coupon.setCompany(companyRepo.findById(companyId).get());
             couponService.updateObject(coupon, couponId);
+            return;
 
         }
         throw new ComapnyException("COULD NOT UPDATE COUPON :: COUPON IS NULL");
     }
-
+@Transactional
     public void deleteCouponFromCompany(Long couponId, Long companyId) throws Exception {
         if (companyHasCoupon(companyId, couponId)) {
-            couponService.deleteObject(couponId);
+            Company company = companyRepo.findById(companyId).get();
+            company.getCouponList().removeIf(c -> c.getId().longValue() == couponId.longValue());
+            companyRepo.saveAndFlush(company);
+
+//            System.out.println(couponId);
+//            couponService.deleteObject(couponId);
+            return;
         }
         throw new ComapnyException("COMPANY DOESN'T HAVE THAT COUPON ");
     }
@@ -161,14 +181,36 @@ public class CompanyService {
         Company company;
         company = companyRepo.existsById(companyId) ? companyRepo.findById(companyId).get() :null;
         if (company!=null && company.getCouponList().size()> -1){
-            List<Coupon> coupons = company.getCouponList();
+            List<Coupon> coupons = company.getCouponList().stream().filter(coupon -> coupon.getCategory()==categoryType).collect(Collectors.toList());
             return coupons;
         }
         throw new ComapnyException("COMPANY NOT FOUND EXCEPTION");
     }
 
+
 @Transactional
     public List<Coupon> getCompanyCouponUpToPrice(Long maxPrice, Long companyId){
         return couponService.getCouponsByMaxPriceAndCompanyId(maxPrice, companyId);
+    }
+
+    @Transactional
+    public void getCompanyDetails(Long id) throws ComapnyException {
+        if (companyRepo.existsById(id)){
+            Company company =companyRepo.findById(id).get();
+            System.out.println("   COMPANY DETAILS   ");
+            System.out.println("COMPANY NAME    :  "+ company.getName());
+            System.out.println("COMPANY EMAIL   :  "+ company.getEmail());
+            System.out.println("COMPANY ID      :  "+ company.getId());
+            if (company.getCouponList().size()==0){
+                System.out.println("COMPANY COUPONS :  "+"COMPANY HAS NO COUPONS");
+
+            }else
+                System.out.println("COMPANY COUPONS :  "+company.getCouponList());
+
+
+            return;
+        }
+        throw new ComapnyException("COMPANY DOES NOT EXISTS");
+
     }
 }
