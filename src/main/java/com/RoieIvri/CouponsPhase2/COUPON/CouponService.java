@@ -34,7 +34,7 @@ if (couponRepo.existsById(objectId)){
     couponRepo.save(coupon);
 
 }
-else throw new CouponException("COULD NOT UPDATE COUPON :: COUPON NOT FOUND EXCEPTION");
+else throw new CouponException(CouponExceptionTypes.COUPON_NOT_FOUND_BY_ID);
     }
 
     public void deleteObject(Long objectId) throws Exception {
@@ -43,7 +43,7 @@ else throw new CouponException("COULD NOT UPDATE COUPON :: COUPON NOT FOUND EXCE
             couponRepo.deleteById(objectId);
             return;
         }
-        throw new CouponException("COUPON NOT FOUND BY ID ");
+        throw new CouponException(CouponExceptionTypes.COUPON_NOT_FOUND_BY_ID);
     }
 
 
@@ -52,7 +52,7 @@ else throw new CouponException("COULD NOT UPDATE COUPON :: COUPON NOT FOUND EXCE
             Coupon coupon =couponRepo.findById(objectId).get();
             return coupon;
         }
-        throw new CouponException("COULD NOT GET COUPON :: COUPON WAS NEVER REGISTERD");
+        throw new CouponException(CouponExceptionTypes.COUPON_NOT_FOUND_BY_ID);
     }
 
 

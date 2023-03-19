@@ -27,6 +27,8 @@ public class CouponsPhase2Application {
 
 		CustomerTester customerTester = ctx.getBean(CustomerTester.class);
 		customerTester.test();
+
+
 	}
 
 }

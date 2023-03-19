@@ -38,19 +38,20 @@ public class CompanyTester {
 
         Company companyFromDb = companyService.addObject(company);
 
-        companyService.getCompanyDetails(companyFromDb.getId());
 
         System.out.println();
         System.out.println();
         System.out.println("      COMPANY TESTER");
         System.out.println();
         System.out.println();
+
         if (companyService.login(randomEmail, password))
-            System.out.println("LOGIN STATUS    : LOGIN SUCCESFULL                                  ===> LOGGED IN  ");
+            System.out.println("LOGIN STATUS                       : LOGIN SUCCESFULL                                                                                 ===> LOGGED IN  ");
         else
-            System.out.println("LOGIN STATUS    : LOGIN FAILED                                   ===> TRY AGAIN  ");
+            System.out.println("LOGIN STATUS                       : LOGIN FAILED                                                                                     ===> TRY AGAIN  ");
         ;
 
+        companyService.getCompanyDetails(companyFromDb.getId());
 
         Coupon coupon = Coupon.builder().title(UUID.randomUUID().toString().substring(0, 5))
                 .price(random.nextInt(0, 50))
@@ -65,20 +66,20 @@ public class CompanyTester {
         coupon = couponService.addObject(coupon);
         companyService.addCoupon(coupon, companyFromDb.getId());
         companyFromDb = companyService.getOneObjectWIthLists(companyFromDb.getId());
-        System.out.println("ADDED COUPON TO COMPANY TEST : COUPON VALID                         ===> ADD SUCCESFULLY ");
-        System.out.println("COMPANY COUPONS TEST         : SHOULD BE  1                         ===> " + companyFromDb.getCouponList().size());
-        System.out.println("GET ALL COUPONS TEST         :                                      ===> " + companyService.getAllCompanyCoupons(companyFromDb.getId()));
-        System.out.println("GET ALL COUPONS BY CAT TEST  : Category.StupidFace                  ===> " + companyService.getCompanyCouponsByCategory(CategoryType.StupidFace, companyFromDb.getId()));
-        System.out.println("GET ALL COUPONS BY CAT TEST  : MAX = 42                             ===> " + companyService.getCompanyCouponUpToPrice(42L, companyFromDb.getId()));
+        System.out.println("ADDED COUPON TO COMPANY TEST       : COUPON VALID                                                                                     ===> ADD SUCCESFULLY ");
+        System.out.println("COMPANY COUPONS TEST               : SHOULD BE  1                                                                                     ===> " + companyFromDb.getCouponList().size());
+        System.out.println("GET ALL COUPONS TEST               :                                                                                                  ===> " + companyService.getAllCompanyCoupons(companyFromDb.getId()));
+        System.out.println("GET ALL COUPONS BY CAT TEST        : Category.StupidFace                                                                              ===> " + companyService.getCompanyCouponsByCategory(CategoryType.StupidFace, companyFromDb.getId()));
+        System.out.println("GET ALL COUPONS BY CAT TEST        : MAX = 42                                                                                         ===> " + companyService.getCompanyCouponUpToPrice(42L, companyFromDb.getId()));
 
 
         coupon.setTitle("NEW UPDATED TITLE ");
         companyService.updateCoupon(coupon, coupon.getId(), company.getId());
         companyFromDb = companyService.getOneObjectWIthLists(companyFromDb.getId());
-        System.out.println("UPDATED COUPON TEST          : TITLE SHOULD BE 'NEW UPDATED TITLE'  ===> " + companyFromDb.getCouponList().get(0).getTitle());
+        System.out.println("UPDATED COUPON TEST                : TITLE SHOULD BE 'NEW UPDATED TITLE'                                                              ===> " + companyFromDb.getCouponList().get(0).getTitle());
         companyService.deleteCouponFromCompany(coupon.getId(), company.getId());
         companyFromDb = companyService.getOneObjectWIthLists(companyFromDb.getId());
-        System.out.println("COMPANY COUPONS DELETE  TEST : LIST SIZE SHOULD BE 0                ===> " + " LIST SIZE  " + companyFromDb.getCouponList().size());
+        System.out.println("COMPANY COUPONS DELETE  TEST       : LIST SIZE SHOULD BE 0                                                                            ===> " + " LIST SIZE  " + companyFromDb.getCouponList().size());
 
 
 

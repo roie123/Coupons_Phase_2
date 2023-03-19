@@ -37,7 +37,7 @@ public class Company {
     public void addCoupon(Coupon coupon ) throws ComapnyException {
         if (coupon!=null){
             this.couponList.add(coupon);
-        }else throw new ComapnyException("COULD NOT ADD COUPON :: COUPON IS NULL");
+        }else throw new ComapnyException(CompanyExceptionTypes.CANNOT_ADD_NULL_COUPON);
 
     }
 

@@ -28,12 +28,12 @@ public class CustomerService {
         if (customerRepo.existsByEmailAndPassword(email,password)){
             return true;
         }
-        throw new CustomerException("CUSTOMER LOGIN VALUES ARE INCORRECT ");
+        throw new CustomerException(CustomerExceptionTypes.CUSTOMER_VALUES_NOT_VALID);
     }
 
     public Customer addObject(Customer customer) throws Exception {
         if (customerRepo.existsByEmail(customer.getEmail())) {
-            throw new CustomerException("NEW CUSTOMER CANT HAVE AN EXISTING EMAIL");
+            throw new CustomerException(CustomerExceptionTypes.CUSTOMER_VALUES_NOT_VALID);
         } else return customerRepo.save(customer);
     }
 
@@ -44,7 +44,7 @@ public class CustomerService {
             customer.setId(objectId);
             customer1 = customer;
             customerRepo.saveAndFlush(customer1);
-        } else throw new CustomerException("CUSTOMER NOT FOUND BY ID ");
+        } else throw new CustomerException(CustomerExceptionTypes.CUSTOMER_NOT_FOUND_BY_ID);
     }
 
     public void deleteObject(Long objectId) throws Exception {
@@ -60,7 +60,7 @@ public class CustomerService {
             Customer customer = customerRepo.findById(objectId).get();
             return customer;
         }
-        throw new CustomerException("CUSTOMER NOT FOUND BY ID");
+        throw new CustomerException(CustomerExceptionTypes.CUSTOMER_NOT_FOUND_BY_ID);
     }
 
     @Transactional
@@ -89,7 +89,7 @@ public class CustomerService {
             for (Coupon c :
                     customer.getCoupons()) {
                 if (c.getId().intValue()==couponId.intValue()){
-                    throw new CustomerException("CANT PURCHASE AN EXISTING COUPON");
+                    throw new CustomerException(CustomerExceptionTypes.CUSTOMER_ALREADY_HAS_COUPON);
                 }
 
             }
@@ -99,13 +99,13 @@ public class CustomerService {
             Coupon coupon = couponService.getOneObject(couponId);
             LocalDate localDate = LocalDate.now();
             if (coupon.getEndDate().isBefore(localDate)){
-                throw new CustomerException("CANT PURCHASE AN OUT OF DATE COUPON ");
+                throw new CustomerException(CustomerExceptionTypes.CANT_PURCHASE_OUT_OF_DATE_COUPON);
             }
             customer.getCoupons().add(coupon);
             updateObject(customer,customerId);
             return;
         }
-        throw new CustomerException("CUSTOMER OR COUPON  NOT FOUND BY ID ");
+        throw new CustomerException(CustomerExceptionTypes.CUSTOMER_NOT_FOUND_BY_ID);
     }
 
 
@@ -118,7 +118,7 @@ public class CustomerService {
         if (customer!=null && customer.getCoupons().size()> -1 ){
             return  customer.getCoupons();
         }
-        throw new CustomerException("CUSTOMER NOT FOUND BY ID ");
+        throw new CustomerException(CustomerExceptionTypes.CUSTOMER_NOT_FOUND_BY_ID);
     }
 
 
@@ -144,11 +144,11 @@ public class CustomerService {
             System.out.println();
             System.out.println("     CUSTOMER DETAILS ==>> ");
             System.out.println();
-            System.out.println("CUSTOMER NAME    ==>" + customer.getFirstName()+customer.getLastName());
-            System.out.println("CUSTOMER EMAIL   ==> "+customer.getEmail());
-            System.out.println("CUSTOMER COUPONS ==> ");
+            System.out.println("CUSTOMER NAME                      :                                                                                                 ===>" + customer.getFirstName()+customer.getLastName());
+            System.out.println("CUSTOMER EMAIL                     :                                                                                                 ===> "+customer.getEmail());
+            System.out.println("CUSTOMER COUPONS                   :                                                                                                 ===> ");
             for (int i = 0; i < customer.getCoupons().size(); i++) {
-                System.out.println((i+1)+" "+ customer.getCoupons().get(i));
+                System.out.println("COUPON NUMBER "+(i+1)+"                    :                                                                                                 ===> "+ customer.getCoupons().get(i));
 
             }
 

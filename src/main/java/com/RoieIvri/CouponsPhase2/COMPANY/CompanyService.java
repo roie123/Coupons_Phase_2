@@ -38,7 +38,7 @@ public class CompanyService {
     public Company addObject(Company company) throws Exception {
         if (company != null && !login(company.getEmail(), company.getPassword())) {
             return companyRepo.save(company);
-        } else throw new ComapnyException("CANNOT ADD COMPANY :: COMPANY IS NULL OR ALREADY EXIST");
+        } else throw new ComapnyException(CompanyExceptionTypes.CANNOT_ADD_NULL_COMPANY);
 
     }
 
@@ -48,9 +48,9 @@ public class CompanyService {
                 company.setId(objectId);/// as per the request
                 return companyRepo.save(company);
 
-            } else throw new ComapnyException("COULD NOT UPDATE COMPANY :: COMPANY NOT FOUND EXCEPTION");
+            } else throw new ComapnyException(CompanyExceptionTypes.COMPANY_NOT_FOUND_BY_ID);
         }
-        throw new ComapnyException("COULD NOT UPDATE COMPANY :: COMPANY  VALUES CANNOT BE NULL");
+        throw new ComapnyException(CompanyExceptionTypes.COMPANY_IS_NULL);
 
     }
 
@@ -60,7 +60,7 @@ public class CompanyService {
         if (companyRepo.findById(objectId).isPresent()) {
            companyRepo.deleteById(objectId);
            return;
-        } else throw new ComapnyException("COULD NOT DELETE COMPANY :: COMPANY NOT FOUND EXCEPTION");
+        } else throw new ComapnyException(CompanyExceptionTypes.COMPANY_NOT_FOUND_BY_ID);
     }
 
     public List<Company> getAllObjects() throws Exception {
@@ -76,7 +76,7 @@ public class CompanyService {
 
 
         }
-        throw new ComapnyException("COMPANY NOT FOUND EXCEPTION ");
+        throw new ComapnyException(CompanyExceptionTypes.COMPANY_NOT_FOUND_BY_ID);
 
 
     }
@@ -93,7 +93,7 @@ public class CompanyService {
 
 
         }
-        throw new ComapnyException("COMPANY NOT FOUND EXCEPTION ");
+        throw new ComapnyException(CompanyExceptionTypes.COMPANY_NOT_FOUND_BY_ID);
 
 
     }
@@ -114,7 +114,7 @@ public class CompanyService {
             updateObject(company, companyId);
             return true;
 
-        } else throw new ComapnyException("COULD NOT ADD COUPON :: COUPON'S TITLE ALREADY TAKEN IN THAT COMPANY  ");
+        } else throw new ComapnyException(CompanyExceptionTypes.COUPON_ALREADY_EXIST);
 
 
     }
@@ -128,7 +128,7 @@ public class CompanyService {
             return;
 
         }
-        throw new ComapnyException("COULD NOT UPDATE COUPON :: COUPON IS NULL");
+        throw new ComapnyException(CompanyExceptionTypes.CANNOT_ADD_NULL_COUPON);
     }
 @Transactional
     public void deleteCouponFromCompany(Long couponId, Long companyId) throws Exception {
@@ -141,7 +141,7 @@ public class CompanyService {
 //            couponService.deleteObject(couponId);
             return;
         }
-        throw new ComapnyException("COMPANY DOESN'T HAVE THAT COUPON ");
+        throw new ComapnyException(CompanyExceptionTypes.COMPANY_DONT_HAVE_THAT_COUPON);
     }
 
     public boolean isCompanyValidToBeAdded(Company company) {
@@ -173,7 +173,7 @@ public class CompanyService {
             return coupons;
 
         }
-        throw new ComapnyException("COMPANY NOT FOUND EXCEPTION");
+        throw new ComapnyException(CompanyExceptionTypes.COMPANY_NOT_FOUND_BY_ID);
     }
 
     @Transactional
@@ -184,7 +184,7 @@ public class CompanyService {
             List<Coupon> coupons = company.getCouponList().stream().filter(coupon -> coupon.getCategory()==categoryType).collect(Collectors.toList());
             return coupons;
         }
-        throw new ComapnyException("COMPANY NOT FOUND EXCEPTION");
+        throw new ComapnyException(CompanyExceptionTypes.COMPANY_NOT_FOUND_BY_ID);
     }
 
 
@@ -197,20 +197,22 @@ public class CompanyService {
     public void getCompanyDetails(Long id) throws ComapnyException {
         if (companyRepo.existsById(id)){
             Company company =companyRepo.findById(id).get();
-            System.out.println("   COMPANY DETAILS   ");
-            System.out.println("COMPANY NAME    :  "+ company.getName());
-            System.out.println("COMPANY EMAIL   :  "+ company.getEmail());
-            System.out.println("COMPANY ID      :  "+ company.getId());
+            System.out.println();
+            System.out.println();
+            System.out.println("       COMPANY DETAILS   ");
+            System.out.println("COMPANY NAME                       :  "+ company.getName());
+            System.out.println("COMPANY EMAIL                      :  "+ company.getEmail());
+            System.out.println("COMPANY ID                         :  "+ company.getId());
             if (company.getCouponList().size()==0){
-                System.out.println("COMPANY COUPONS :  "+"COMPANY HAS NO COUPONS");
+                System.out.println("COMPANY COUPONS                    :  "+"COMPANY HAS NO COUPONS");
 
             }else
-                System.out.println("COMPANY COUPONS :  "+company.getCouponList());
+                System.out.println("COMPANY COUPONS                    :  "+company.getCouponList());
 
 
             return;
         }
-        throw new ComapnyException("COMPANY DOES NOT EXISTS");
+        throw new ComapnyException(CompanyExceptionTypes.COMPANY_NOT_FOUND_BY_ID);
 
     }
 }

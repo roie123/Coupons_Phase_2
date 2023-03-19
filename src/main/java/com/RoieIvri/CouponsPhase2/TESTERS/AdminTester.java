@@ -56,7 +56,7 @@ public class AdminTester {
 
             Company companyFromDb = adminService.addCompany(company);
             companyFromDb = adminService.getSingleCompany(companyFromDb.getId()); // used the get single for the transactional attribute
-            System.out.println("THE CREATED COMPANY ===> " + companyFromDb);
+            System.out.println("THE CREATED COMPANY                :                                                                                                 ===> " + companyFromDb);
 
 
             Coupon coupon = Coupon.builder()
@@ -74,50 +74,51 @@ public class AdminTester {
             companyFromDb.setName("STARLORD");
             adminService.updateCompany(companyFromDb, companyFromDb.getId()); //ADDING A COMPANY
             companyFromDb = adminService.getSingleCompany(companyFromDb.getId()); // used the get single for the transactional attribute
-            System.out.println("UPDATED COMPANY(GET SINGLE) : UPDATED NAME SHOULD BE STARLORD                                                     ===> " + companyFromDb); //Getting the real updated company with the coupon list
-            System.out.println("COUPON LIST                 : SHOULD BE NULL BECAUSE YOU CANT CREATE A COUPON FROM CREATING OR UPDATING A COMPANY ===> " + companyFromDb.getCouponList());
+            System.out.println("UPDATED COMPANY(GET SINGLE)        : UPDATED NAME SHOULD BE STARLORD                                                                  ===> " + companyFromDb); //Getting the real updated company with the coupon list
+            System.out.println("COUPON LIST                        : SHOULD BE NULL BECAUSE YOU CANT CREATE A COUPON FROM CREATING OR UPDATING A COMPANY              ===> " + companyFromDb.getCouponList());
             adminService.deleteCompany(companyFromDb.getId());
             try {
                 companyFromDb = adminService.getSingleCompany(companyFromDb.getId()); // used the get single for the transactional attribute
 
             } catch (ComapnyException comapnyException) {
-                System.out.println("SEARCHING FOR COMPANY BY ID : COMPANY NOT FOUND                                                                   ===> DELETE SUCCESSFUL");
-            }
-
-            List<Company> companies = adminService.getAllCompanies();
-            System.out.println("GET ALL COMPANIES           : CURRENT COMPANIES COUNT DOES NOT SUPPOSE TO CHANGE IN TEST                          ===> " + companies.size() + " OVERALL");
+                System.out.println("SEARCHING FOR COMPANY BY ID        : COMPANY NOT FOUND                                                                                ===> DELETE SUCCESSFUL");
 
 
-            System.out.println();
-            System.out.println("  CUSTOMER FEATURES IN ADMIN SERVICE");
-            System.out.println();
-            Customer customer = Customer.builder().isActive(true)
-                    .firstName("First " + UUID.randomUUID().toString().substring(0, 3))
-                    .lastName("Last " + UUID.randomUUID().toString().substring(0, 3))
-                    .password("SHIT PASS")
-                    .email(UUID.randomUUID().toString().substring(0, 3) + "@gmail.com")
-                    .build();
+                List<Company> companies = adminService.getAllCompanies();
+                System.out.println("GET ALL COMPANIES                  : CURRENT COMPANIES COUNT DOES NOT SUPPOSE TO CHANGE IN TEST                                       ===> " + companies.size() + " OVERALL");
 
-            //Customer List Testing
 
-            customer = adminService.addNewCustomer(customer);
-            customer = adminService.getSingleCustomerById(customer.getId());
-            System.out.println("NEWLY CREATED CUSTOMER(GET SINGLE): SAVED TO DATABASE                                                             ===> " + customer);
-            adminService.deleteCustomer(customer.getId());
-            try {
+                System.out.println();
+                System.out.println("  CUSTOMER FEATURES IN ADMIN SERVICE");
+                System.out.println();
+                Customer customer = Customer.builder().isActive(true)
+                        .firstName("First " + UUID.randomUUID().toString().substring(0, 3))
+                        .lastName("Last " + UUID.randomUUID().toString().substring(0, 3))
+                        .password("SHIT PASS")
+                        .email(UUID.randomUUID().toString().substring(0, 3) + "@gmail.com")
+                        .build();
+
+                //Customer List Testing
+
+                customer = adminService.addNewCustomer(customer);
                 customer = adminService.getSingleCustomerById(customer.getId());
-            } catch (Exception exception) {
-                System.out.println("SEARCHING FOR CUSTOMER BY ID : CUSTOMER NOT FOUND                                                                 ===> DELETE SUCCESSFUL");
+                System.out.println("NEWLY CREATED CUSTOMER(GET SINGLE) : SAVED TO DATABASE                                                                                ===> " + customer);
+                adminService.deleteCustomer(customer.getId());
+                try {
+                    customer = adminService.getSingleCustomerById(customer.getId());
+                } catch (Exception exception) {
+                    System.out.println("SEARCHING FOR CUSTOMER BY ID       : CUSTOMER NOT FOUND                                                                               ===> DELETE SUCCESSFUL");
+
+                }
+                List<Customer> customers = adminService.getAllCustomers();
+                System.out.println("GET ALL CUSTOMERS                  : CURRENT CUSTOMERS COUNT SHOULD NOT CHANGE IN TEST                                                ===> " + customers.size() + " OVERALL");
+
 
             }
-            List<Customer> customers = adminService.getAllCustomers();
-            System.out.println("GET ALL CUSTOMERS           : CURRENT CUSTOMERS COUNT SHOULD NOT CHANGE IN TEST                                   ===> " + customers.size() + " OVERALL");
 
+
+            //FINISH LOGIN TEST
 
         }
-
-
-        //FINISH LOGIN TEST
-
     }
 }

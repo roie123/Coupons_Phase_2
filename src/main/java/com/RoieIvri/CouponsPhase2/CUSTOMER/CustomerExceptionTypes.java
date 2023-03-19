@@ -1,0 +1,8 @@
+package com.RoieIvri.CouponsPhase2.CUSTOMER;
+
+public enum CustomerExceptionTypes {
+    CUSTOMER_NOT_FOUND_BY_ID,
+    CUSTOMER_VALUES_NOT_VALID,
+    CUSTOMER_ALREADY_HAS_COUPON,
+    CANT_PURCHASE_OUT_OF_DATE_COUPON
+}
