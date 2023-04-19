@@ -5,10 +5,13 @@ import com.RoieIvri.CouponsPhase2.COUPON.CouponService;
 import com.RoieIvri.CouponsPhase2.CategoryType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +25,7 @@ public class CompanyService {
     @Autowired
     private final CouponService couponService;
 
+    private final ConversionService conversionService;
     private Long selectedCompanyId;
 
 
@@ -109,6 +113,9 @@ public class CompanyService {
     public boolean addCoupon(Coupon coupon, Long companyId) throws Exception {
         if (!couponService.isCouponExistByTitleAndCompanyId(coupon.getTitle(), companyId)) {
             Company company = companyRepo.findById(companyId).get();
+            if (coupon.getEndDate().isBefore(LocalDate.now())){
+                throw new ComapnyException(CompanyExceptionTypes.INVALID_COUPON_VALUES);
+            }
             company.getCouponList().add(coupon);
             coupon.setCompany(company);
             updateObject(company, companyId);
@@ -214,5 +221,12 @@ public class CompanyService {
         }
         throw new ComapnyException(CompanyExceptionTypes.COMPANY_NOT_FOUND_BY_ID);
 
+    }
+
+@Transactional
+    public List<CompanyDTO> getAllCompaniesSecured(){
+        List<CompanyDTO>companyDTOS = new ArrayList<>();
+         companyRepo.getAllCompaniesDTO().forEach(company -> companyDTOS.add(conversionService.convert(company, CompanyDTO.class)));
+         return companyDTOS;
     }
 }

@@ -7,7 +7,6 @@ import com.RoieIvri.CouponsPhase2.COUPON.CouponService;
 import com.RoieIvri.CouponsPhase2.CategoryType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -99,5 +98,11 @@ public class CompanyTester {
         Coupon coupon1FromDB = couponService.addObject(coupon1);
         companyService.addCoupon(coupon, companyFromDb.getId());
         CustomerTester.availableCouponId=coupon1FromDB.getId();
+
+
+        System.out.println(")))))))))))))))))))))))))))))))))))))))))");
+        System.out.println(companyService.getAllCompaniesSecured());
+        System.out.println(")))))))))))))))))))))))))))))))))))))))))");
+
     }
 }

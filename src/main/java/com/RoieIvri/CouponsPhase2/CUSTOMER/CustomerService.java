@@ -7,11 +7,13 @@ import com.RoieIvri.CouponsPhase2.COUPON.CouponService;
 import com.RoieIvri.CouponsPhase2.CategoryType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +24,7 @@ public class CustomerService {
     @Autowired
     private CustomerRepo customerRepo;
 
+    private final ConversionService conversionService;
     private final CouponService couponService;
 
     public boolean login(String email, String password) throws Exception {
@@ -51,8 +54,11 @@ public class CustomerService {
         customerRepo.deleteById(objectId);
     }
 
-    public List<Customer> getAllObjects() throws Exception {
-        return customerRepo.getAllByisActiveIsTrue();
+    public List<CustomerDTO> getAllObjects() throws Exception {
+
+        List<CustomerDTO> customerDTOS = new ArrayList<>();
+         customerRepo.getAllSecured().forEach(customer ->conversionService.convert(customer,CustomerDTO.class) );
+         return customerDTOS;
     }
 
     public Customer getOneObject(Long objectId) throws Exception {
@@ -84,7 +90,7 @@ public class CustomerService {
         }
 
 
-
+//TODO turn it to sql
         if (customer!=null&&  customer.getCoupons().size()> -1){
             for (Coupon c :
                     customer.getCoupons()) {

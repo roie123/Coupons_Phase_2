@@ -6,9 +6,11 @@ import com.RoieIvri.CouponsPhase2.ADMIN.AdminException;
 import com.RoieIvri.CouponsPhase2.ADMIN.AdminService;
 import com.RoieIvri.CouponsPhase2.COMPANY.ComapnyException;
 import com.RoieIvri.CouponsPhase2.COMPANY.Company;
+import com.RoieIvri.CouponsPhase2.COMPANY.CompanyDTO;
 import com.RoieIvri.CouponsPhase2.COMPANY.CompanyService;
 import com.RoieIvri.CouponsPhase2.COUPON.Coupon;
 import com.RoieIvri.CouponsPhase2.CUSTOMER.Customer;
+import com.RoieIvri.CouponsPhase2.CUSTOMER.CustomerDTO;
 import com.RoieIvri.CouponsPhase2.CategoryType;
 import com.RoieIvri.CouponsPhase2.LOGIN_MANAGER.ClientType;
 import com.RoieIvri.CouponsPhase2.LOGIN_MANAGER.LoginManager;
@@ -56,7 +58,7 @@ public class AdminTester {
 
             Company companyFromDb = adminService.addCompany(company);
             companyFromDb = adminService.getSingleCompany(companyFromDb.getId()); // used the get single for the transactional attribute
-            System.out.println("THE CREATED COMPANY                :                                                                                                 ===> " + companyFromDb);
+            System.out.println("THE CREATED COMPANY                :                                                                                                  ===> " + companyFromDb);
 
 
             Coupon coupon = Coupon.builder()
@@ -84,7 +86,7 @@ public class AdminTester {
                 System.out.println("SEARCHING FOR COMPANY BY ID        : COMPANY NOT FOUND                                                                                ===> DELETE SUCCESSFUL");
 
 
-                List<Company> companies = adminService.getAllCompanies();
+                List<CompanyDTO> companies = adminService.getAllCompanies();
                 System.out.println("GET ALL COMPANIES                  : CURRENT COMPANIES COUNT DOES NOT SUPPOSE TO CHANGE IN TEST                                       ===> " + companies.size() + " OVERALL");
 
 
@@ -110,7 +112,7 @@ public class AdminTester {
                     System.out.println("SEARCHING FOR CUSTOMER BY ID       : CUSTOMER NOT FOUND                                                                               ===> DELETE SUCCESSFUL");
 
                 }
-                List<Customer> customers = adminService.getAllCustomers();
+                List<CustomerDTO> customers = adminService.getAllCustomers();
                 System.out.println("GET ALL CUSTOMERS                  : CURRENT CUSTOMERS COUNT SHOULD NOT CHANGE IN TEST                                                ===> " + customers.size() + " OVERALL");
 
 

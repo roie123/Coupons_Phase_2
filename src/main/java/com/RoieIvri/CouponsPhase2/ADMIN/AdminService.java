@@ -1,10 +1,12 @@
 package com.RoieIvri.CouponsPhase2.ADMIN;
 
 import com.RoieIvri.CouponsPhase2.COMPANY.Company;
+import com.RoieIvri.CouponsPhase2.COMPANY.CompanyDTO;
 import com.RoieIvri.CouponsPhase2.COMPANY.CompanyRepo;
 import com.RoieIvri.CouponsPhase2.COMPANY.CompanyService;
 import com.RoieIvri.CouponsPhase2.COUPON.CouponService;
 import com.RoieIvri.CouponsPhase2.CUSTOMER.Customer;
+import com.RoieIvri.CouponsPhase2.CUSTOMER.CustomerDTO;
 import com.RoieIvri.CouponsPhase2.CUSTOMER.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +51,8 @@ public class AdminService {
     }
 
 
-    public List<Company> getAllCompanies() throws Exception {
-        return companyService.getAllObjects();
+    public List<CompanyDTO> getAllCompanies() throws Exception {
+        return companyService.getAllCompaniesSecured();
     }
 
     public Company getSingleCompany(Long id) throws Exception {
@@ -63,7 +65,7 @@ public class AdminService {
         customerService.deleteObject(objectId);
     }
 
-    public List<Customer> getAllCustomers() throws Exception {
+    public List<CustomerDTO> getAllCustomers() throws Exception {
         return customerService.getAllObjects();
     }
 
