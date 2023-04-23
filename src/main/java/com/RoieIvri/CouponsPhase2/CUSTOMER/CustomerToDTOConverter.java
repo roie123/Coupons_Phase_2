@@ -9,6 +9,7 @@ public class CustomerToDTOConverter implements Converter<Customer,CustomerDTO> {
                 .id(source.getId())
                 .firstName(source.getFirstName())
                 .lastName(source.getLastName())
+                .email(source.getEmail())
                 .build();
     }
 }

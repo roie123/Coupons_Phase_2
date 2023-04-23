@@ -9,6 +9,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -71,9 +72,11 @@ public class CompanyService {
         return companyRepo.getAllByisActiveIsTrue();
     }
 
+    @Transactional
     public Company getOneObject(Long objectId) throws Exception {
         if (companyRepo.findById(objectId).isPresent()) {
             Company company = companyRepo.findById(objectId).get();
+            System.out.println(company.getCouponList());
                 return companyRepo.findById(objectId).get();
 
 
@@ -175,10 +178,8 @@ public class CompanyService {
     @Transactional(propagation= Propagation.REQUIRED)
     public List<Coupon> getAllCompanyCoupons(Long companyId) throws Exception {
         Company company =companyRepo.findById(companyId).isPresent() ? companyRepo.findById(companyId).get() :null;
-        if (company!=null && company.getCouponList().size()> -1){
-            List<Coupon> coupons = company.getCouponList();
-            return coupons;
-
+        if (company!= null){
+            return company.getCouponList();
         }
         throw new ComapnyException(CompanyExceptionTypes.COMPANY_NOT_FOUND_BY_ID);
     }

@@ -54,10 +54,13 @@ public class CustomerService {
         customerRepo.deleteById(objectId);
     }
 
+    @Transactional
     public List<CustomerDTO> getAllObjects() throws Exception {
 
         List<CustomerDTO> customerDTOS = new ArrayList<>();
-         customerRepo.getAllSecured().forEach(customer ->conversionService.convert(customer,CustomerDTO.class) );
+         customerRepo.getAllSecured().forEach(customer -> {
+             customerDTOS.add(conversionService.convert(customer, CustomerDTO.class));
+         } );
          return customerDTOS;
     }
 

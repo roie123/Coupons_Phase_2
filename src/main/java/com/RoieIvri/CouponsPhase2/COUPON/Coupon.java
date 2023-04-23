@@ -2,6 +2,7 @@ package com.RoieIvri.CouponsPhase2.COUPON;
 
 import com.RoieIvri.CouponsPhase2.COMPANY.Company;
 import com.RoieIvri.CouponsPhase2.CategoryType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -37,6 +38,7 @@ public class Coupon {
     @ManyToOne()
     @ToString.Exclude
     @JoinColumn
+    @JsonIgnore
     private Company company;
 
     public Coupon(String title, String description, LocalDate startDate, LocalDate endDate, int amount, double price, String image) {

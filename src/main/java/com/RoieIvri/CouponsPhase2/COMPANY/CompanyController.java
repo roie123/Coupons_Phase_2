@@ -13,6 +13,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/company")
+@CrossOrigin
 public class CompanyController extends ClientController {
 
 

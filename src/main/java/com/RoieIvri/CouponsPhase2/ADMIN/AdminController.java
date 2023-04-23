@@ -16,6 +16,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin")
+@CrossOrigin
 public class AdminController extends ClientController {
 
     private  final  AdminService adminService;
@@ -29,6 +30,7 @@ public class AdminController extends ClientController {
 
     @PostMapping()
     public Company addCompany(@RequestBody Company company ) throws Exception {
+        System.out.println(company);
         return adminService.addCompany(company);
 
 
