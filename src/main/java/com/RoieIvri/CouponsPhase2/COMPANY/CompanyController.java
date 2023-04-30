@@ -47,8 +47,8 @@ public class CompanyController extends ClientController {
         return companyService.getAllCompanyCoupons(companyId);
     }
     @GetMapping("/getCoupons/byCat/{companyId}/{category}")
-    public List<Coupon> getCompanyCouponsByCategory(@PathVariable Long companyId, @PathVariable CategoryType categoryType) throws ComapnyException {
-        return companyService.getCompanyCouponsByCategory(categoryType,companyId);
+    public List<Coupon> getCompanyCouponsByCategory(@PathVariable Long companyId, @PathVariable CategoryType category) throws ComapnyException {
+        return companyService.getCompanyCouponsByCategory(category,companyId);
     }
 
     @GetMapping("/getCoupons/byMaxPrice/{companyId}/{max}")
