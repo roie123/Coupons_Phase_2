@@ -29,7 +29,7 @@ public class Company {
 
     private boolean isActive = true;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "company",orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "company",orphanRemoval = true,fetch = FetchType.LAZY)
     private List<Coupon> couponList = new ArrayList<>();
 
 
@@ -49,7 +49,7 @@ public class Company {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", isActive=" + isActive +
-//                ", couponList=" + couponList +
+                ", couponList=" + couponList +
                 '}';
     }
 }

@@ -13,6 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/customer")
 @RequiredArgsConstructor
+@CrossOrigin
 public class CustomerController extends ClientController {
 
 
@@ -44,6 +45,10 @@ public class CustomerController extends ClientController {
         return customerService.getCustomerCouponsUpToPrice(customerId,max);
     }
 
+    @GetMapping("/coupons/available")
+    public List<Coupon> getAllCouponsAvailable(){
+        return customerService.getAvailableCouponsToPurchase();
+    }
 
 
 

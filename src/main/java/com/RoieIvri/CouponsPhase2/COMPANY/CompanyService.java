@@ -3,7 +3,9 @@ package com.RoieIvri.CouponsPhase2.COMPANY;
 import com.RoieIvri.CouponsPhase2.COUPON.Coupon;
 import com.RoieIvri.CouponsPhase2.COUPON.CouponService;
 import com.RoieIvri.CouponsPhase2.CategoryType;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -76,7 +79,6 @@ public class CompanyService {
     public Company getOneObject(Long objectId) throws Exception {
         if (companyRepo.findById(objectId).isPresent()) {
             Company company = companyRepo.findById(objectId).get();
-            System.out.println(company.getCouponList());
                 return companyRepo.findById(objectId).get();
 
 
@@ -178,6 +180,7 @@ public class CompanyService {
     @Transactional(propagation= Propagation.REQUIRED)
     public List<Coupon> getAllCompanyCoupons(Long companyId) throws Exception {
         Company company =companyRepo.findById(companyId).isPresent() ? companyRepo.findById(companyId).get() :null;
+        System.out.println(company);
         if (company!= null){
             return company.getCouponList();
         }
@@ -230,4 +233,9 @@ public class CompanyService {
          companyRepo.getAllCompaniesDTO().forEach(company -> companyDTOS.add(conversionService.convert(company, CompanyDTO.class)));
          return companyDTOS;
     }
+
+
+
+
+
 }

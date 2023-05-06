@@ -2,20 +2,17 @@ package com.RoieIvri.CouponsPhase2.CUSTOMER;
 
 import com.RoieIvri.CouponsPhase2.COMPANY.Company;
 import com.RoieIvri.CouponsPhase2.COUPON.Coupon;
-import com.RoieIvri.CouponsPhase2.COUPON.CouponException;
 import com.RoieIvri.CouponsPhase2.COUPON.CouponService;
 import com.RoieIvri.CouponsPhase2.CategoryType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -162,6 +159,15 @@ public class CustomerService {
             }
 
         }
+    }
+
+
+
+    public List<Coupon> getAvailableCouponsToPurchase(){
+
+    return couponService.getAvailableCoupons();
+
+
     }
 
 

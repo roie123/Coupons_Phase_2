@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -14,6 +15,7 @@ public interface CouponRepo extends JpaRepository<Coupon,Long> {
 
     public boolean existsById(Long id);
     public List<Coupon> getCouponByCompany(Company company);
+    public List<Coupon> getCouponByAmountIsGreaterThanAndEndDateIsAfter(Long minAmount, LocalDate localDate);
 
     @Procedure("getCouponsByCategoryAndCompanyId")
     public List<Coupon> getAllCouponsByOrdinalCategoryAndCompanyId(int categoryInOrdinal,Long companyId);
