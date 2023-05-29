@@ -15,8 +15,8 @@ public class AuthController {
     @PostMapping("/login")
     public TokenResponseDTO login(@RequestBody LoginRequestDTO loginRequestDTO){
         System.out.println("Login request reached ");
-        authService.validateLoginDetails(loginRequestDTO);
+      return   authService.validateLoginDetails(loginRequestDTO);
 
-        return null;
+
     }
 }
