@@ -18,4 +18,7 @@ public interface CustomerRepo extends JpaRepository<Customer,Long> {
     @Procedure("getAllCustomersSecured")
     List<Customer> getAllSecured();
 
+
+    Customer getByEmail(String email);
+
 }

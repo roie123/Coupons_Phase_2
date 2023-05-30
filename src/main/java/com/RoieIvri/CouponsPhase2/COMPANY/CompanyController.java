@@ -6,14 +6,15 @@ import com.RoieIvri.CouponsPhase2.CategoryType;
 import com.RoieIvri.CouponsPhase2.GenericTools.ClientController;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Secured({"ROLE_COMPANY"})
 @RequestMapping("/api/company")
-@CrossOrigin
 public class CompanyController extends ClientController {
 
 

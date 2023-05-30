@@ -2,10 +2,16 @@ package com.RoieIvri.CouponsPhase2.COMPANY;
 
 import com.RoieIvri.CouponsPhase2.COUPON.Coupon;
 import com.RoieIvri.CouponsPhase2.COUPON.CouponRepo;
+import com.RoieIvri.CouponsPhase2.SECURITY.Authorities;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -14,8 +20,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 @Table(name = "companies")
-public class Company {
+public class Company implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -51,5 +58,62 @@ public class Company {
                 ", isActive=" + isActive +
                 ", couponList=" + couponList +
                 '}';
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //SECURITY
+
+    @Override
+    public String getPassword(){
+        return this.password;
+    }
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(Authorities.ROLE_COMPANY.toString()));
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
     }
 }

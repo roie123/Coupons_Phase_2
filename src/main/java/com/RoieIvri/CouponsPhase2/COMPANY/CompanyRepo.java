@@ -17,5 +17,7 @@ public interface CompanyRepo extends JpaRepository<Company,Long> {
     @Procedure("getAllCompaniesSecured")
     List<Company> getAllCompaniesDTO();
 
+    public Company getByEmail(String email);
+
 
 }

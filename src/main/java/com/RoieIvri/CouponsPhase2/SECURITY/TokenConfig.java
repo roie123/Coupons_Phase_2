@@ -5,9 +5,11 @@ package com.RoieIvri.CouponsPhase2.SECURITY;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -41,5 +43,10 @@ public class TokenConfig {
     }
 
 
-
+    public Map<String, Object> buildClaims(UserDetails user) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userName", user.getUsername());
+        claims.put("role", user.getAuthorities());
+        return claims;
+    }
 }

@@ -10,6 +10,9 @@ import com.RoieIvri.CouponsPhase2.CUSTOMER.Customer;
 import com.RoieIvri.CouponsPhase2.CUSTOMER.CustomerDTO;
 import com.RoieIvri.CouponsPhase2.CUSTOMER.CustomerService;
 import com.RoieIvri.CouponsPhase2.CategoryType;
+import com.RoieIvri.CouponsPhase2.SECURITY.LoginRequestDTO;
+import com.RoieIvri.CouponsPhase2.SECURITY.TokenConfig;
+import com.RoieIvri.CouponsPhase2.SECURITY.TokenResponseDTO;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,20 +20,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
 public class AdminService {
-    @Autowired
     private final CompanyService companyService;
 
-    @Autowired
     private final CouponService couponService;
 
-    @Autowired
     private final CustomerService customerService;
+
+    private final TokenConfig tokenConfig;
 
     public boolean isLoginValid(String email,String password){
         if (email.equals("admin@admin.com") && password.equals("admin")){
@@ -41,9 +45,11 @@ public class AdminService {
     }
 
 
-    public Company addCompany(Company company ) throws Exception {
+    public TokenResponseDTO addCompany(Company company ) throws Exception {
     if (companyService.isCompanyValidToBeAdded(company)){
-      return  companyService.addObject(company);
+         Company company1=  companyService.addObject(company);
+        String token = this.tokenConfig.generateToken(this.buildClaimsForCompany(company1));
+        return new TokenResponseDTO(token);
     }
     else throw new AdminException("COMPANY COULD NOT BE ADDED :: NOT VALID VALUES");
     }
@@ -63,8 +69,12 @@ public class AdminService {
     public Company getSingleCompany(Long id) throws Exception {
         return companyService.getOneObject(id);
     }
-    public Customer addNewCustomer(Customer customer) throws Exception {
-      return   customerService.addObject(customer);
+    public TokenResponseDTO addNewCustomer(Customer customer) throws Exception {
+        Customer customer1 = customerService.addObject(customer);
+
+        String token = this.tokenConfig.generateToken(this.buildClaimsForCustomer(customer1));
+        return new TokenResponseDTO(token);
+
     }
     public void deleteCustomer(Long objectId) throws Exception {
         customerService.deleteObject(objectId);
@@ -79,6 +89,18 @@ public class AdminService {
     }
 
 
+    private Map<String, Object> buildClaimsForCompany(Company company) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userName", company.getUsername());
+        claims.put("role", company.getAuthorities());
+        return claims;
+    }
 
+    private Map<String, Object> buildClaimsForCustomer(Customer customer) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("userName", customer.getUsername());
+        claims.put("role", customer.getAuthorities());
+        return claims;
+    }
 
 }

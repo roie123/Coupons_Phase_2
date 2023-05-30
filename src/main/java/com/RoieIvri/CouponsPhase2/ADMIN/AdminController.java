@@ -7,8 +7,12 @@ import com.RoieIvri.CouponsPhase2.CUSTOMER.Customer;
 import com.RoieIvri.CouponsPhase2.CUSTOMER.CustomerDTO;
 import com.RoieIvri.CouponsPhase2.CUSTOMER.CustomerService;
 import com.RoieIvri.CouponsPhase2.GenericTools.ClientController;
+import com.RoieIvri.CouponsPhase2.SECURITY.Authorities;
+import com.RoieIvri.CouponsPhase2.SECURITY.TokenResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.loader.LoaderLogging;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +20,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/admin")
+@Secured({"ROLE_ADMIN"})
 @CrossOrigin
 public class AdminController extends ClientController {
 
@@ -29,7 +34,7 @@ public class AdminController extends ClientController {
 
 
     @PostMapping()
-    public Company addCompany(@RequestBody Company company ) throws Exception {
+    public TokenResponseDTO addCompany(@RequestBody Company company ) throws Exception {
         System.out.println(company);
         return adminService.addCompany(company);
 
@@ -61,7 +66,7 @@ public class AdminController extends ClientController {
 
 
     @PostMapping("/customer")
-    public Customer addNewCustomer(@RequestBody Customer customer) throws Exception {
+    public TokenResponseDTO addNewCustomer(@RequestBody Customer customer) throws Exception {
         return adminService.addNewCustomer(customer);
     }
 

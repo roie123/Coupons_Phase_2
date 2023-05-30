@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.util.ToStringUtil;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,10 +15,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-@Component@RequiredArgsConstructor
-public class SecurityFilter  extends OncePerRequestFilter {
+@Component
+@RequiredArgsConstructor
+public class SecurityFilter extends OncePerRequestFilter {
 
-private final TokenConfig tokenConfig;
+    private final TokenConfig tokenConfig;
     private final UserService userService;
 
     @Override
@@ -28,7 +30,6 @@ private final TokenConfig tokenConfig;
             return;
         }
         final String token = tokenHeader.substring(7);
-
         String userName = this.tokenConfig.getUserNameFromToken(token);
         if (userName != null) {
             boolean isTokenExpirationValid = this.tokenConfig.isExpirationToken(token);
@@ -39,20 +40,14 @@ private final TokenConfig tokenConfig;
                             = new UsernamePasswordAuthenticationToken(
                             userDetails,
                             null,
-                            new ArrayList<>()
+                            userDetails.getAuthorities()
                     );
                     SecurityContextHolder.getContext().setAuthentication(authentication);
+                    System.out.println(authentication);
                 }
             }
         }
 
-        // Validation
-        // Inform Spring
-        System.out.println(token);
-        // Valid!!!!!!
         filterChain.doFilter(request, response);
-        // Validation token...
-        // token valid
-        // ...
     }
 }

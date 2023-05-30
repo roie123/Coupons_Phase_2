@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,20 +24,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CompanyService {
 
-    @Autowired
     private final CompanyRepo companyRepo;
 
-    @Autowired
     private final CouponService couponService;
 
     private final ConversionService conversionService;
     private Long selectedCompanyId;
-
+    private final PasswordEncoder passwordEncoder;
 
     public boolean login(String email, String password) throws Exception {
         if (companyRepo.existsByEmailAndPassword(email, password)) {
             Company loggedIn = companyRepo.getCompanyByEmailAndPassword(email, password);
-            selectedCompanyId=loggedIn.getId();
+            selectedCompanyId = loggedIn.getId();
             return true;
         }
         ;
@@ -45,6 +44,9 @@ public class CompanyService {
 
     public Company addObject(Company company) throws Exception {
         if (company != null && !login(company.getEmail(), company.getPassword())) {
+            company.setPassword(passwordEncoder.encode(company.getPassword()));
+            company.getAuthorities();
+            System.out.println(company.getAuthorities());
             return companyRepo.save(company);
         } else throw new ComapnyException(CompanyExceptionTypes.CANNOT_ADD_NULL_COMPANY);
 
@@ -66,8 +68,8 @@ public class CompanyService {
     @Transactional
     public void deleteObject(Long objectId) throws Exception {
         if (companyRepo.findById(objectId).isPresent()) {
-           companyRepo.deleteById(objectId);
-           return;
+            companyRepo.deleteById(objectId);
+            return;
         } else throw new ComapnyException(CompanyExceptionTypes.COMPANY_NOT_FOUND_BY_ID);
     }
 
@@ -79,9 +81,7 @@ public class CompanyService {
     public Company getOneObject(Long objectId) throws Exception {
         if (companyRepo.findById(objectId).isPresent()) {
             Company company = companyRepo.findById(objectId).get();
-                return companyRepo.findById(objectId).get();
-
-
+            return companyRepo.findById(objectId).get();
 
 
         }
@@ -89,16 +89,15 @@ public class CompanyService {
 
 
     }
+
     @Transactional
     public Company getOneObjectWIthLists(Long objectId) throws Exception {
         if (companyRepo.findById(objectId).isPresent()) {
             Company company = companyRepo.findById(objectId).get();
-            if (company.getCouponList().size()> -1 ){
+            if (company.getCouponList().size() > -1) {
                 return companyRepo.findById(objectId).get();
 
             }
-
-
 
 
         }
@@ -118,7 +117,7 @@ public class CompanyService {
     public boolean addCoupon(Coupon coupon, Long companyId) throws Exception {
         if (!couponService.isCouponExistByTitleAndCompanyId(coupon.getTitle(), companyId)) {
             Company company = companyRepo.findById(companyId).get();
-            if (coupon.getEndDate().isBefore(LocalDate.now())){
+            if (coupon.getEndDate().isBefore(LocalDate.now())) {
                 throw new ComapnyException(CompanyExceptionTypes.INVALID_COUPON_VALUES);
             }
             company.getCouponList().add(coupon);
@@ -132,7 +131,7 @@ public class CompanyService {
     }
 
 
-    public void updateCoupon(Coupon coupon, Long couponId,Long companyId) throws Exception {
+    public void updateCoupon(Coupon coupon, Long couponId, Long companyId) throws Exception {
         if (couponService.getOneObject(couponId) != null) {
             coupon.setId(couponId);
             coupon.setCompany(companyRepo.findById(companyId).get());
@@ -142,7 +141,8 @@ public class CompanyService {
         }
         throw new ComapnyException(CompanyExceptionTypes.CANNOT_ADD_NULL_COUPON);
     }
-@Transactional
+
+    @Transactional
     public void deleteCouponFromCompany(Long couponId, Long companyId) throws Exception {
         if (companyHasCoupon(companyId, couponId)) {
             Company company = companyRepo.findById(companyId).get();
@@ -177,11 +177,11 @@ public class CompanyService {
 
     }
 
-    @Transactional(propagation= Propagation.REQUIRED)
+    @Transactional(propagation = Propagation.REQUIRED)
     public List<Coupon> getAllCompanyCoupons(Long companyId) throws Exception {
-        Company company =companyRepo.findById(companyId).isPresent() ? companyRepo.findById(companyId).get() :null;
+        Company company = companyRepo.findById(companyId).isPresent() ? companyRepo.findById(companyId).get() : null;
         System.out.println(company);
-        if (company!= null){
+        if (company != null) {
             return company.getCouponList();
         }
         throw new ComapnyException(CompanyExceptionTypes.COMPANY_NOT_FOUND_BY_ID);
@@ -190,35 +190,35 @@ public class CompanyService {
     @Transactional
     public List<Coupon> getCompanyCouponsByCategory(CategoryType categoryType, Long companyId) throws ComapnyException {
         Company company;
-        company = companyRepo.existsById(companyId) ? companyRepo.findById(companyId).get() :null;
-        if (company!=null && company.getCouponList().size()> -1){
-            List<Coupon> coupons = company.getCouponList().stream().filter(coupon -> coupon.getCategory()==categoryType).collect(Collectors.toList());
+        company = companyRepo.existsById(companyId) ? companyRepo.findById(companyId).get() : null;
+        if (company != null && company.getCouponList().size() > -1) {
+            List<Coupon> coupons = company.getCouponList().stream().filter(coupon -> coupon.getCategory() == categoryType).collect(Collectors.toList());
             return coupons;
         }
         throw new ComapnyException(CompanyExceptionTypes.COMPANY_NOT_FOUND_BY_ID);
     }
 
 
-@Transactional
-    public List<Coupon> getCompanyCouponUpToPrice(Long maxPrice, Long companyId){
+    @Transactional
+    public List<Coupon> getCompanyCouponUpToPrice(Long maxPrice, Long companyId) {
         return couponService.getCouponsByMaxPriceAndCompanyId(maxPrice, companyId);
     }
 
     @Transactional
     public void getCompanyDetails(Long id) throws ComapnyException {
-        if (companyRepo.existsById(id)){
-            Company company =companyRepo.findById(id).get();
+        if (companyRepo.existsById(id)) {
+            Company company = companyRepo.findById(id).get();
             System.out.println();
             System.out.println();
             System.out.println("       COMPANY DETAILS   ");
-            System.out.println("COMPANY NAME                       :  "+ company.getName());
-            System.out.println("COMPANY EMAIL                      :  "+ company.getEmail());
-            System.out.println("COMPANY ID                         :  "+ company.getId());
-            if (company.getCouponList().size()==0){
-                System.out.println("COMPANY COUPONS                    :  "+"COMPANY HAS NO COUPONS");
+            System.out.println("COMPANY NAME                       :  " + company.getName());
+            System.out.println("COMPANY EMAIL                      :  " + company.getEmail());
+            System.out.println("COMPANY ID                         :  " + company.getId());
+            if (company.getCouponList().size() == 0) {
+                System.out.println("COMPANY COUPONS                    :  " + "COMPANY HAS NO COUPONS");
 
-            }else
-                System.out.println("COMPANY COUPONS                    :  "+company.getCouponList());
+            } else
+                System.out.println("COMPANY COUPONS                    :  " + company.getCouponList());
 
 
             return;
@@ -227,15 +227,17 @@ public class CompanyService {
 
     }
 
-@Transactional
-    public List<CompanyDTO> getAllCompaniesSecured(){
-        List<CompanyDTO>companyDTOS = new ArrayList<>();
-         companyRepo.getAllCompaniesDTO().forEach(company -> companyDTOS.add(conversionService.convert(company, CompanyDTO.class)));
-         return companyDTOS;
+    @Transactional
+    public List<CompanyDTO> getAllCompaniesSecured() {
+        List<CompanyDTO> companyDTOS = new ArrayList<>();
+        companyRepo.getAllCompaniesDTO().forEach(company -> companyDTOS.add(conversionService.convert(company, CompanyDTO.class)));
+        return companyDTOS;
     }
 
 
-
-
+    @Transactional
+    public Company getByEmail(String email) {
+        return companyRepo.getByEmail(email);
+    }
 
 }

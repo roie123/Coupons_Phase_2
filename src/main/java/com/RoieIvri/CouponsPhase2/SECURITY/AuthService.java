@@ -19,7 +19,7 @@ public class AuthService {
     public TokenResponseDTO validateLoginDetails(LoginRequestDTO loginRequestDTO) {
         boolean isLoginValid = this.isLoginDetailsValid(loginRequestDTO);
         if (isLoginValid) {
-            return new TokenResponseDTO(this.tokenConfig.generateToken(this.buildClaims(loginRequestDTO.getUserName())));
+            return new TokenResponseDTO(this.tokenConfig.generateToken(this.buildClaims(loginRequestDTO)));
         }
 
         return null;
@@ -47,11 +47,14 @@ public class AuthService {
     }
 
 
-    private Map<String, Object> buildClaims(String userName) {
+    private Map<String, Object> buildClaims(LoginRequestDTO loginRequestDTO) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("userName", userName);
-        claims.put("firstName", "Idan");
-        claims.put("lastName", "Ayash");
+        claims.put("userName", loginRequestDTO.getUserName());
+        claims.put("role", loginRequestDTO.getClientType());
         return claims;
     }
+
+
+
+
 }
