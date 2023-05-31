@@ -6,6 +6,7 @@ import com.RoieIvri.CouponsPhase2.CategoryType;
 import com.RoieIvri.CouponsPhase2.GenericTools.ClientController;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/customer")
 @RequiredArgsConstructor
+@Secured("ROLE_CUSTOMER")
 @CrossOrigin
 public class CustomerController extends ClientController {
 
