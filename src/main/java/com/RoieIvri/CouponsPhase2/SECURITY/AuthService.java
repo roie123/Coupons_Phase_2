@@ -1,12 +1,16 @@
 package com.RoieIvri.CouponsPhase2.SECURITY;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.util.ToStringUtil;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -16,9 +20,11 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final TokenConfig tokenConfig;
 
+
     public TokenResponseDTO validateLoginDetails(LoginRequestDTO loginRequestDTO) {
         boolean isLoginValid = this.isLoginDetailsValid(loginRequestDTO);
         if (isLoginValid) {
+            System.out.println("FFSFSFSF");
             return new TokenResponseDTO(this.tokenConfig.generateToken(this.buildClaims(loginRequestDTO)));
         }
 
@@ -37,13 +43,14 @@ public class AuthService {
             );
 
 
-        } catch (BadCredentialsException e) {
-            System.out.println(e.getMessage());
-            ;
-            return false;
-        }
 
+        } catch (Exception e) {
+            System.out.println(e);
+
+        }
+        System.out.println("Hellp0");
         return true;
+
     }
 
 

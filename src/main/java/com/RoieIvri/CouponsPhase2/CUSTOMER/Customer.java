@@ -19,6 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "customers")
 @Builder
+@ToString
 public class Customer implements UserDetails {
 
     @Id
@@ -73,7 +74,7 @@ public class Customer implements UserDetails {
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override

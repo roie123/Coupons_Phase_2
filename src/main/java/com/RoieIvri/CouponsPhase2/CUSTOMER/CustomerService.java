@@ -7,6 +7,7 @@ import com.RoieIvri.CouponsPhase2.CategoryType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,8 @@ public class CustomerService {
     private final ConversionService conversionService;
     private final CouponService couponService;
 
+    private final PasswordEncoder passwordEncoder;
+
     public boolean login(String email, String password) throws Exception {
         if (customerRepo.existsByEmailAndPassword(email, password)) {
             return true;
@@ -36,7 +39,7 @@ public class CustomerService {
             throw new CustomerException(CustomerExceptionTypes.CUSTOMER_VALUES_NOT_VALID);
         } else{
 
-
+                        customer.setPassword(passwordEncoder.encode(customer.getPassword()));
     return             customerRepo.save(customer);
 
 

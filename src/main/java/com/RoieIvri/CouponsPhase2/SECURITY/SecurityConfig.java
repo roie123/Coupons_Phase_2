@@ -23,7 +23,7 @@ public class SecurityConfig {
         return httpSecurity
                 .authorizeHttpRequests()
 //                .requestMatchers("/api/demo", "/api/demo/{value}")
-                .requestMatchers("/api/demo/**", "/api/auth/**")
+                .requestMatchers("/api/demo/**", "/api/auth/**","/api/auth/login" )
                 .permitAll()
                 .anyRequest()
                 .authenticated()
