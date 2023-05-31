@@ -27,7 +27,7 @@ public class Company implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-
+    @Column(updatable = false)
     private String name;
 
     private String email;
@@ -36,15 +36,14 @@ public class Company implements UserDetails {
 
     private boolean isActive = true;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "company",orphanRemoval = true,fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "company", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Coupon> couponList = new ArrayList<>();
 
 
-
-    public void addCoupon(Coupon coupon ) throws ComapnyException {
-        if (coupon!=null){
+    public void addCoupon(Coupon coupon) throws ComapnyException {
+        if (coupon != null) {
             this.couponList.add(coupon);
-        }else throw new ComapnyException(CompanyExceptionTypes.CANNOT_ADD_NULL_COUPON);
+        } else throw new ComapnyException(CompanyExceptionTypes.CANNOT_ADD_NULL_COUPON);
 
     }
 
@@ -61,28 +60,10 @@ public class Company implements UserDetails {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     //SECURITY
 
     @Override
-    public String getPassword(){
+    public String getPassword() {
         return this.password;
     }
 
@@ -114,6 +95,6 @@ public class Company implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }

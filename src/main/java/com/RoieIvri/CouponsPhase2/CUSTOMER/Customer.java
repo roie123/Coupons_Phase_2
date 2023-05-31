@@ -63,7 +63,7 @@ public class Customer implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
@@ -78,6 +78,6 @@ public class Customer implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }

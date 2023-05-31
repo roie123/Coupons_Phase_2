@@ -49,8 +49,10 @@ public class CustomerService {
         if (customerRepo.existsById(objectId)) {
             Customer customer1 = customerRepo.findById(objectId).get();
             customer1.setCoupons(customer.getCoupons());
-            customer.setId(objectId);
-            customer1 = customer;
+            customer1.setId(objectId);
+            customer1.setEmail(customer.getEmail());
+            customer1.setLastName(customer.getLastName());
+            customer1.setFirstName(customer.getFirstName());
             customerRepo.saveAndFlush(customer1);
         } else throw new CustomerException(CustomerExceptionTypes.CUSTOMER_NOT_FOUND_BY_ID);
     }
