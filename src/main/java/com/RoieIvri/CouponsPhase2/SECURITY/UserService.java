@@ -5,6 +5,7 @@ import com.RoieIvri.CouponsPhase2.COMPANY.CompanyService;
 import com.RoieIvri.CouponsPhase2.CUSTOMER.Customer;
 import com.RoieIvri.CouponsPhase2.CUSTOMER.CustomerService;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +22,7 @@ import java.util.List;
 public class UserService implements UserDetailsService {
     private final CompanyService companyService;
     private final CustomerService customerService;
+    @SneakyThrows
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -36,12 +38,13 @@ public class UserService implements UserDetailsService {
 
 
         Customer customer = customerService.getByEmail(username);
-        System.out.println(customer);
+
         if (customer!=null){
-            System.out.println("returninig customer");
+
             return customer;
         }
+        throw new SecurityException(SecurityExceptionType.EmailNotFound.toString());
 
-       return null;
+
     }
 }

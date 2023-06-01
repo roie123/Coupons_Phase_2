@@ -24,7 +24,6 @@ public class AuthService {
     public TokenResponseDTO validateLoginDetails(LoginRequestDTO loginRequestDTO) {
         boolean isLoginValid = this.isLoginDetailsValid(loginRequestDTO);
         if (isLoginValid) {
-            System.out.println("FFSFSFSF");
             return new TokenResponseDTO(this.tokenConfig.generateToken(this.buildClaims(loginRequestDTO)));
         }
 
@@ -33,7 +32,6 @@ public class AuthService {
 
 
     private boolean isLoginDetailsValid(LoginRequestDTO loginRequestDTO) {
-        System.out.println(loginRequestDTO);
         try {
             this.authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -45,10 +43,10 @@ public class AuthService {
 
 
         } catch (Exception e) {
-            System.out.println(e);
+            throw e;
 
         }
-        System.out.println("Hellp0");
+
         return true;
 
     }

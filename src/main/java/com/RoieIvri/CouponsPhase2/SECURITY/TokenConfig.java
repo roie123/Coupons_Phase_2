@@ -16,7 +16,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class TokenConfig {
 
-    private final String SECRET_KEY = "1234";
+    public static final String SECRET_KEY = "1234";
 
     public String generateToken(Map<String, Object> claims) {
         return Jwts.builder()
@@ -49,4 +49,6 @@ public class TokenConfig {
         claims.put("role", user.getAuthorities());
         return claims;
     }
+
+
 }

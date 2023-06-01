@@ -3,6 +3,10 @@ package com.RoieIvri.CouponsPhase2.COMPANY;
 import com.RoieIvri.CouponsPhase2.COUPON.Coupon;
 import com.RoieIvri.CouponsPhase2.COUPON.CouponService;
 import com.RoieIvri.CouponsPhase2.CategoryType;
+import com.RoieIvri.CouponsPhase2.SECURITY.TokenConfig;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import io.jsonwebtoken.Jwts;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
@@ -20,6 +24,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import static javax.crypto.Cipher.SECRET_KEY;
+
 @Service
 @RequiredArgsConstructor
 public class CompanyService {
@@ -31,6 +37,7 @@ public class CompanyService {
     private final ConversionService conversionService;
     private Long selectedCompanyId;
     private final PasswordEncoder passwordEncoder;
+    private final TokenConfig tokenConfig;
 
     public boolean login(String email, String password) throws Exception {
         if (companyRepo.existsByEmailAndPassword(email, password)) {
@@ -178,8 +185,9 @@ public class CompanyService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public List<Coupon> getAllCompanyCoupons(Long companyId) throws Exception {
-        Company company = companyRepo.findById(companyId).isPresent() ? companyRepo.findById(companyId).get() : null;
+    public List<Coupon> getAllCompanyCoupons(Long companyId, String token) throws Exception {
+
+        Company company = companyRepo.findById( this.getCompanyByBearerHeader(token)).isPresent() ? companyRepo.findById(companyId).get() : null;
         System.out.println(company);
         if (company != null) {
             return company.getCouponList();
@@ -238,6 +246,16 @@ public class CompanyService {
     @Transactional
     public Company getByEmail(String email) {
         return companyRepo.getByEmail(email);
+    }
+
+
+    private Long getCompanyByBearerHeader(String token) {
+//        token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjpbeyJhdXRob3JpdHkiOiJST0xFX0NPTVBBTlkifV0sInVzZXJOYW1lIjoiZHNkYXNhc2FzZ2hqY3Zhc3NhQGdtYXNpbC5jb20iLCJpYXQiOjE2ODU2MzY0MTksImV4cCI6MTY4NTYzODIxOX0.qeHwY619uLuWk7K1sgIfkUUiaukhQPBcYk7QSA0xh8g";
+//        System.out.println(tokenConfig.getUserNameFromToken(token));
+//        System.out.println(token.substring(7,token.length()-1));
+//        System.out.println(token.substring(7,token.length()).equals("eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjpbeyJhdXRob3JpdHkiOiJST0xFX0NPTVBBTlkifV0sInVzZXJOYW1lIjoiZHNkYXNhc2FzZ2hqY3Zhc3NhQGdtYXNpbC5jb20iLCJpYXQiOjE2ODU2MzY0MTksImV4cCI6MTY4NTYzODIxOX0.qeHwY619uLuWk7K1sgIfkUUiaukhQPBcYk7QSA0xh8g"));
+        String userNeme = tokenConfig.getUserNameFromToken(token.substring(7));
+        return getByEmail(userNeme).getId();
     }
 
 }

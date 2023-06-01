@@ -6,7 +6,9 @@ import com.RoieIvri.CouponsPhase2.CategoryType;
 import com.RoieIvri.CouponsPhase2.GenericTools.ClientController;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.web.header.Header;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,8 +46,9 @@ public class CompanyController extends ClientController {
     }
 
     @GetMapping("/getCoupons/{companyId}")
-    public List<Coupon> getCompanyCoupons(@PathVariable Long companyId) throws Exception {
-        return companyService.getAllCompanyCoupons(companyId);
+    public List<Coupon> getCompanyCoupons(@PathVariable Long companyId, @RequestHeader(HttpHeaders.AUTHORIZATION) String header) throws Exception {
+
+        return companyService.getAllCompanyCoupons(companyId,header);
     }
     @GetMapping("/getCoupons/byCat/{companyId}/{category}")
     public List<Coupon> getCompanyCouponsByCategory(@PathVariable Long companyId, @PathVariable CategoryType category) throws ComapnyException {
