@@ -4,7 +4,7 @@
 //import com.RoieIvri.CouponsPhase2.COMPANY.CompanyService;
 //import com.RoieIvri.CouponsPhase2.COUPON.Coupon;
 //import com.RoieIvri.CouponsPhase2.COUPON.CouponService;
-//import com.RoieIvri.CouponsPhase2.CategoryType;
+//import com.RoieIvri.CouponsPhase2.COUPON.CategoryType;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Component;

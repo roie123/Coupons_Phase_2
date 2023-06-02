@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.support.DefaultConversionService;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 
 @Configuration
 public class WebConfig {
@@ -19,4 +20,5 @@ public class WebConfig {
         service.addConverter(new CustomerToDTOConverter());
         return service;
     }
+
 }

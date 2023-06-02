@@ -2,29 +2,19 @@ package com.RoieIvri.CouponsPhase2.COMPANY;
 
 import com.RoieIvri.CouponsPhase2.COUPON.Coupon;
 import com.RoieIvri.CouponsPhase2.COUPON.CouponService;
-import com.RoieIvri.CouponsPhase2.CategoryType;
+import com.RoieIvri.CouponsPhase2.COUPON.CategoryType;
 import com.RoieIvri.CouponsPhase2.SECURITY.TokenConfig;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import io.jsonwebtoken.Jwts;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Hibernate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
-
-import static javax.crypto.Cipher.SECRET_KEY;
 
 @Service
 @RequiredArgsConstructor

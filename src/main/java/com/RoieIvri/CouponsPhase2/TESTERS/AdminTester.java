@@ -11,7 +11,7 @@
 //import com.RoieIvri.CouponsPhase2.COUPON.Coupon;
 //import com.RoieIvri.CouponsPhase2.CUSTOMER.Customer;
 //import com.RoieIvri.CouponsPhase2.CUSTOMER.CustomerDTO;
-//import com.RoieIvri.CouponsPhase2.CategoryType;
+//import com.RoieIvri.CouponsPhase2.COUPON.CategoryType;
 //import com.RoieIvri.CouponsPhase2.LOGIN_MANAGER.ClientType;
 //import com.RoieIvri.CouponsPhase2.LOGIN_MANAGER.LoginManager;
 //import lombok.RequiredArgsConstructor;

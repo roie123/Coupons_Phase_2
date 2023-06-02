@@ -36,14 +36,9 @@ public class Customer implements UserDetails {
 
    private String password;
 
+   @ToString.Exclude
    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private List<Coupon> coupons= new ArrayList<>();
-
-
-
-
-
-
 
 
 

@@ -1,13 +1,11 @@
 package com.RoieIvri.CouponsPhase2.COUPON;
 
 import com.RoieIvri.CouponsPhase2.COMPANY.Company;
-import com.RoieIvri.CouponsPhase2.CategoryType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.util.StringTokenizer;
 
 @Getter
 @Setter

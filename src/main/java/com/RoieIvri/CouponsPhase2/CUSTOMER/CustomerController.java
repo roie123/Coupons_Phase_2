@@ -1,11 +1,10 @@
 package com.RoieIvri.CouponsPhase2.CUSTOMER;
 
-import ch.qos.logback.classic.pattern.LineSeparatorConverter;
 import com.RoieIvri.CouponsPhase2.COUPON.Coupon;
-import com.RoieIvri.CouponsPhase2.CategoryType;
+import com.RoieIvri.CouponsPhase2.COUPON.CategoryType;
 import com.RoieIvri.CouponsPhase2.GenericTools.ClientController;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,24 +26,24 @@ public class CustomerController extends ClientController {
     }
 
 
-    @PutMapping("/purchaseCoupon/{couponId}/{customerId}")
-    public void purchaseCoupon(@PathVariable Long couponId , @PathVariable Long customerId) throws Exception {
-        customerService.purchaseCoupon(couponId,customerId);
+    @PutMapping("/purchaseCoupon/{couponId}")
+    public Long purchaseCoupon(@PathVariable Long couponId  , @RequestHeader(HttpHeaders.AUTHORIZATION) String header )  throws Exception {
+        return customerService.purchaseCoupon(couponId,header);
     }
 
-    @GetMapping("/coupons/{customerId}")
-    public List<Coupon> getAllCustomerCoupons(@PathVariable Long customerId) throws CustomerException {
-        return customerService.getCustomerCoupons(customerId);
+    @GetMapping("/coupons")
+    public List<Coupon> getAllCustomerCoupons(@RequestHeader(HttpHeaders.AUTHORIZATION) String header) throws CustomerException {
+        return customerService.getCustomerCoupons(header);
     }
 
-    @GetMapping("/coupons/byCat/{customerId}/{category}")
-    public List<Coupon> getAllCustomerCouponsByCategory(@PathVariable Long customerId, @PathVariable CategoryType category) throws CustomerException {
-        return customerService.getCustomerCouponsByCategory(customerId,category);
+    @GetMapping("/coupons/byCat/{category}")
+    public List<Coupon> getAllCustomerCouponsByCategory( @PathVariable CategoryType category ,@RequestHeader(HttpHeaders.AUTHORIZATION) String header) throws CustomerException {
+        return customerService.getCustomerCouponsByCategory(header,category);
     }
 
     @GetMapping("/coupons/byMax/{customerId}/{max}")
-    public List<Coupon> getAllCustomerCouponsByMaxPrice(@PathVariable Long customerId, @PathVariable Long max) throws CustomerException {
-        return customerService.getCustomerCouponsUpToPrice(customerId,max);
+    public List<Coupon> getAllCustomerCouponsByMaxPrice( @PathVariable Long max , @RequestHeader(HttpHeaders.AUTHORIZATION) String header) throws CustomerException {
+        return customerService.getCustomerCouponsUpToPrice(header,max);
     }
 
     @GetMapping("/coupons/available")

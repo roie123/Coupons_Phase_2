@@ -5,7 +5,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -14,7 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class SecurityConfig  {
     private final UserService userService;
     private final SecurityFilter securityFilter;
     //JUST FOR GIT
@@ -23,7 +26,7 @@ public class SecurityConfig {
         return httpSecurity
                 .authorizeHttpRequests()
 //                .requestMatchers("/api/demo", "/api/demo/{value}")
-                .requestMatchers("/api/demo/**", "/api/auth/**","/api/auth/login" )
+                .requestMatchers("/api/demo/**", "/api/auth/**","/api/auth/login", "/welcome/**" )
                 .permitAll()
                 .anyRequest()
                 .authenticated()

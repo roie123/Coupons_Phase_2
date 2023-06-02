@@ -2,13 +2,11 @@ package com.RoieIvri.CouponsPhase2.COMPANY;
 
 
 import com.RoieIvri.CouponsPhase2.COUPON.Coupon;
-import com.RoieIvri.CouponsPhase2.CategoryType;
+import com.RoieIvri.CouponsPhase2.COUPON.CategoryType;
 import com.RoieIvri.CouponsPhase2.GenericTools.ClientController;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.web.header.Header;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

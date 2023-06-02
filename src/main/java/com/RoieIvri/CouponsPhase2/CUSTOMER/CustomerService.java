@@ -2,8 +2,11 @@ package com.RoieIvri.CouponsPhase2.CUSTOMER;
 
 import com.RoieIvri.CouponsPhase2.COMPANY.Company;
 import com.RoieIvri.CouponsPhase2.COUPON.Coupon;
+import com.RoieIvri.CouponsPhase2.COUPON.CouponException;
+import com.RoieIvri.CouponsPhase2.COUPON.CouponExceptionTypes;
 import com.RoieIvri.CouponsPhase2.COUPON.CouponService;
-import com.RoieIvri.CouponsPhase2.CategoryType;
+import com.RoieIvri.CouponsPhase2.COUPON.CategoryType;
+import com.RoieIvri.CouponsPhase2.SECURITY.TokenConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
@@ -26,6 +29,7 @@ public class CustomerService {
     private final CouponService couponService;
 
     private final PasswordEncoder passwordEncoder;
+    private final TokenConfig tokenConfig;
 
     public boolean login(String email, String password) throws Exception {
         if (customerRepo.existsByEmailAndPassword(email, password)) {
@@ -95,43 +99,49 @@ public class CustomerService {
     }
 
     @Transactional
-    public void purchaseCoupon(Long couponId, Long customerId) throws Exception {
-        Customer customer = new Customer();
-        if (customerRepo.existsById(customerId)) {
-            customer = customerRepo.findById(customerId).get();
+    public Long purchaseCoupon(Long couponId, String header) throws Exception {
+        Customer customer = this.getCustomerByToken(header);
+        System.out.println("from PC" + customer);
+        if (customer != null) {
+            //TODO turn it to sql
+            if (customer != null && customer.getCoupons().size() > -1) {
 
-        }
 
-
-//TODO turn it to sql
-        if (customer != null && customer.getCoupons().size() > -1) {
-            for (Coupon c :
-                    customer.getCoupons()) {
-                if (c.getId().intValue() == couponId.intValue()) {
+                if (customerRepo.existsCustomerCoupon(customer.getId(), couponId)) {
                     throw new CustomerException(CustomerExceptionTypes.CUSTOMER_ALREADY_HAS_COUPON);
+
+
+                }
+                if (!couponService.existById(couponId)) {
+                    throw new CouponException(CouponExceptionTypes.COUPON_NOT_FOUND_BY_ID);
                 }
 
             }
 
-        }
-        if (customer != null && customer.getCoupons().size() > -1 && couponService.existById(couponId)) {
-            Coupon coupon = couponService.getOneObject(couponId);
-            LocalDate localDate = LocalDate.now();
-            if (coupon.getEndDate().isBefore(localDate)) {
-                throw new CustomerException(CustomerExceptionTypes.CANT_PURCHASE_OUT_OF_DATE_COUPON);
+            if (customer != null && customer.getCoupons().size() > -1 && couponService.existById(couponId)) {
+                Coupon coupon = couponService.getOneObject(couponId);
+
+
+                LocalDate localDate = LocalDate.now();
+                if (coupon.getEndDate().isBefore(localDate)) {
+                    throw new CustomerException(CustomerExceptionTypes.CANT_PURCHASE_OUT_OF_DATE_COUPON);
+                }
+                customer.getCoupons().add(coupon);
+                updateObject(customer, customer.getId());
+                return couponId;
             }
-            customer.getCoupons().add(coupon);
-            updateObject(customer, customerId);
-            return;
+
         }
-        throw new CustomerException(CustomerExceptionTypes.CUSTOMER_NOT_FOUND_BY_ID);
+
+
+        return -1L;
     }
 
 
     @Transactional
-    public List<Coupon> getCustomerCoupons(Long customerId) throws CustomerException {
-        Customer customer;
-        customer = customerRepo.existsById(customerId) ? customerRepo.findById(customerId).get() : null;
+    public List<Coupon> getCustomerCoupons(String header) throws CustomerException {
+        Customer customer = this.getCustomerByToken(header);
+
         if (customer != null && customer.getCoupons().size() > -1) {
             return customer.getCoupons();
         }
@@ -146,12 +156,12 @@ public class CustomerService {
 
     }
 
-    public List<Coupon> getCustomerCouponsByCategory(Long customerId, CategoryType categoryType) {
-        return couponService.getCustomerCouponsByCategory(customerId, categoryType);
+    public List<Coupon> getCustomerCouponsByCategory(String  header, CategoryType categoryType) {
+        return couponService.getCustomerCouponsByCategory(this.getCustomerByToken(header).getId(), categoryType);
     }
 
-    public List<Coupon> getCustomerCouponsUpToPrice(Long customerId, Long maxPrice) {
-        return couponService.getCustomerCouponsUpToPrice(customerId, maxPrice);
+    public List<Coupon> getCustomerCouponsUpToPrice(String header, Long maxPrice) {
+        return couponService.getCustomerCouponsUpToPrice(this.getCustomerByToken(header).getId(), maxPrice);
     }
 
     @Transactional
@@ -184,4 +194,11 @@ public class CustomerService {
     public Customer getByEmail(String email) {
         return customerRepo.getByEmail(email);
     }
+
+
+    public Customer getCustomerByToken(String token) {
+        String userName = tokenConfig.getUserNameFromToken(token.substring(7));
+        return getByEmail(userName);
+    }
+
 }

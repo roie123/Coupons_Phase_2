@@ -2,28 +2,19 @@ package com.RoieIvri.CouponsPhase2.ADMIN;
 
 import com.RoieIvri.CouponsPhase2.COMPANY.Company;
 import com.RoieIvri.CouponsPhase2.COMPANY.CompanyDTO;
-import com.RoieIvri.CouponsPhase2.COMPANY.CompanyRepo;
 import com.RoieIvri.CouponsPhase2.COMPANY.CompanyService;
-import com.RoieIvri.CouponsPhase2.COUPON.Coupon;
 import com.RoieIvri.CouponsPhase2.COUPON.CouponService;
 import com.RoieIvri.CouponsPhase2.CUSTOMER.Customer;
 import com.RoieIvri.CouponsPhase2.CUSTOMER.CustomerDTO;
 import com.RoieIvri.CouponsPhase2.CUSTOMER.CustomerService;
-import com.RoieIvri.CouponsPhase2.CategoryType;
-import com.RoieIvri.CouponsPhase2.SECURITY.LoginRequestDTO;
 import com.RoieIvri.CouponsPhase2.SECURITY.TokenConfig;
 import com.RoieIvri.CouponsPhase2.SECURITY.TokenResponseDTO;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 @Service
 @RequiredArgsConstructor

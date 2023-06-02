@@ -1,16 +1,15 @@
 package com.RoieIvri.CouponsPhase2.COUPON;
 
-import com.RoieIvri.CouponsPhase2.COMPANY.Company;
-import com.RoieIvri.CouponsPhase2.CategoryType;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -104,5 +103,9 @@ public class CouponService {
 
 
 
+    public List<Coupon> getAllCouponsForWelcome(int page , int size){
+        Pageable page1 = PageRequest.of(page,size);
+        return couponRepo.getAllByAmountIsGreaterThanAndEndDateIsBefore(0,LocalDate.now(),page1);
+    }
 }
 

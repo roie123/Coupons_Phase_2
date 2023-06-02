@@ -3,7 +3,7 @@
 //import com.RoieIvri.CouponsPhase2.ADMIN.AdminService;
 //import com.RoieIvri.CouponsPhase2.CUSTOMER.Customer;
 //import com.RoieIvri.CouponsPhase2.CUSTOMER.CustomerService;
-//import com.RoieIvri.CouponsPhase2.CategoryType;
+//import com.RoieIvri.CouponsPhase2.COUPON.CategoryType;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.stereotype.Component;
 //

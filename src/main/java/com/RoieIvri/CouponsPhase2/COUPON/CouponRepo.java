@@ -1,17 +1,20 @@
 package com.RoieIvri.CouponsPhase2.COUPON;
 
 import com.RoieIvri.CouponsPhase2.COMPANY.Company;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Repository
 public interface CouponRepo extends JpaRepository<Coupon,Long> {
 
     public boolean existsByTitleAndCompanyId(String title, Long companyId);
+    List<Coupon> getAllByAmountIsGreaterThanAndEndDateIsBefore(int amount, LocalDate localDate, Pageable pageable);
 
     public boolean existsById(Long id);
     public List<Coupon> getCouponByCompany(Company company);
