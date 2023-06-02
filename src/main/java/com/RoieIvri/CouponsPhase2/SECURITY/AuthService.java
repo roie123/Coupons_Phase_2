@@ -32,6 +32,8 @@ public class AuthService {
 
 
     private boolean isLoginDetailsValid(LoginRequestDTO loginRequestDTO) {
+        System.out.println("isLoginDetailsValid FUNC");
+
         try {
             this.authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -40,11 +42,13 @@ public class AuthService {
                     )
             );
 
+            System.out.println("isLoginDetailsValid FUNC END ");
 
 
-        } catch (Exception e) {
-            throw e;
+        } catch (BadCredentialsException e) {
+            System.out.println(e.toString());
 
+            return false;
         }
 
         return true;

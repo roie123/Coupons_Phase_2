@@ -26,14 +26,15 @@ public class UserService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
+        System.out.println("loadUserByUsername FUNC");
         if (username.equals("Admin@gmail.com")){
             return new User("Admin@gmail.com","Administhebest", List.of(new SimpleGrantedAuthority(Authorities.ROLE_ADMIN.toString())));
         }
         Company company = companyService.getByEmail(username);
-
+        System.out.println(company);
         if (company!= null){
-            return companyService.getByEmail(username);
+            System.out.println("HI");
+            return company;
         }
 
 

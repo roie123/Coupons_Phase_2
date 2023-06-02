@@ -29,16 +29,19 @@ public class SecurityFilter extends OncePerRequestFilter {
         String tokenHeader = request.getHeader("Authorization");
         if (tokenHeader == null || !tokenHeader.startsWith("Bearer")) {
             filterChain.doFilter(request, response);
+
             return;
         }
         final String token = tokenHeader.substring(7);
+        System.out.println(token);
         String userName = this.tokenConfig.getUserNameFromToken(token);
+        System.out.println(userName);
 
         if (userName != null) {
             boolean isTokenExpirationValid = this.tokenConfig.isExpirationToken(token);
             if (isTokenExpirationValid) {
                 UserDetails userDetails = this.userService.loadUserByUsername(userName);
-
+                System.out.println("Request User Details " + userDetails);
 
                 if (userDetails== null){
                     throw new SecurityException(SecurityExceptionType.EmailNotFound.toString());
@@ -53,7 +56,7 @@ public class SecurityFilter extends OncePerRequestFilter {
                             userDetails.getAuthorities()
                     );
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-
+                    System.out.println(authentication.getAuthorities());
                 }
             }
         }

@@ -29,9 +29,9 @@ public class CompanyController extends ClientController {
     }
 
 
-    @PostMapping("/coupon/{companyId}")
-    public boolean addNewCoupon(@RequestBody Coupon coupon , @PathVariable Long companyId) throws Exception {
-        return companyService.addCoupon(coupon,companyId);
+    @PostMapping("/coupon")
+    public boolean addNewCoupon(@RequestBody Coupon coupon , @RequestHeader(HttpHeaders.AUTHORIZATION) String header) throws Exception {
+        return companyService.addCoupon(coupon,header);
     }
 
     @PutMapping("/coupon/{couponId}/{companyId}")
@@ -56,7 +56,7 @@ public class CompanyController extends ClientController {
     }
 
     @GetMapping("/getCoupons/byMaxPrice/{companyId}/{max}")
-    public List<Coupon> getCompanyCouponsByMaxPrice(@PathVariable Long companyId , @PathVariable Long max){
+    public List<Coupon> getCompanyCouponsByMaxPrice(@PathVariable Long companyId , @PathVariable Long max, @RequestHeader(HttpHeaders.AUTHORIZATION) String header){
         return companyService.getCompanyCouponUpToPrice(max,companyId);
     }
 }

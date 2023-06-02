@@ -37,10 +37,10 @@ public class CustomerService {
     public Customer addObject(Customer customer) throws Exception {
         if (customerRepo.existsByEmail(customer.getEmail())) {
             throw new CustomerException(CustomerExceptionTypes.CUSTOMER_VALUES_NOT_VALID);
-        } else{
+        } else {
 
-                        customer.setPassword(passwordEncoder.encode(customer.getPassword()));
-    return             customerRepo.save(customer);
+            customer.setPassword(passwordEncoder.encode(customer.getPassword()));
+            return customerRepo.save(customer);
 
 
         }

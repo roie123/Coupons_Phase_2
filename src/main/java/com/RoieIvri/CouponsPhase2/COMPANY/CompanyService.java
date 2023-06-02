@@ -121,15 +121,18 @@ public class CompanyService {
     }
 
     @Transactional
-    public boolean addCoupon(Coupon coupon, Long companyId) throws Exception {
-        if (!couponService.isCouponExistByTitleAndCompanyId(coupon.getTitle(), companyId)) {
-            Company company = companyRepo.findById(companyId).get();
+    public boolean addCoupon(Coupon coupon, String token) throws Exception {
+        System.out.println("add Coupon func");
+        Company company = companyRepo.findById(getCompanyByBearerHeader(token)).orElseThrow();
+
+        if (!couponService.isCouponExistByTitleAndCompanyId(coupon.getTitle(), company.getId())) {
+
             if (coupon.getEndDate().isBefore(LocalDate.now())) {
                 throw new ComapnyException(CompanyExceptionTypes.INVALID_COUPON_VALUES);
             }
             company.getCouponList().add(coupon);
             coupon.setCompany(company);
-            updateObject(company, companyId);
+            updateObject(company, company.getId());
             return true;
 
         } else throw new ComapnyException(CompanyExceptionTypes.COUPON_ALREADY_EXIST);
