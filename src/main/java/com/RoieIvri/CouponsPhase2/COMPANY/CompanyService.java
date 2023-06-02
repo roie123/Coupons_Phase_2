@@ -141,10 +141,10 @@ public class CompanyService {
     }
 
 
-    public void updateCoupon(Coupon coupon, Long couponId, Long companyId) throws Exception {
+    public void updateCoupon(Coupon coupon, Long couponId, String token) throws Exception {
         if (couponService.getOneObject(couponId) != null) {
             coupon.setId(couponId);
-            coupon.setCompany(companyRepo.findById(companyId).get());
+            coupon.setCompany(companyRepo.findById(this.getCompanyByBearerHeader(token)).get());
             couponService.updateObject(coupon, couponId);
             return;
 
@@ -153,14 +153,14 @@ public class CompanyService {
     }
 
     @Transactional
-    public void deleteCouponFromCompany(Long couponId, Long companyId) throws Exception {
+    public void deleteCouponFromCompany(Long couponId, String token) throws Exception {
+        Long companyId = this.getCompanyByBearerHeader(token);
         if (companyHasCoupon(companyId, couponId)) {
             Company company = companyRepo.findById(companyId).get();
             company.getCouponList().removeIf(c -> c.getId().longValue() == couponId.longValue());
             companyRepo.saveAndFlush(company);
 
-//            System.out.println(couponId);
-//            couponService.deleteObject(couponId);
+
             return;
         }
         throw new ComapnyException(CompanyExceptionTypes.COMPANY_DONT_HAVE_THAT_COUPON);
@@ -188,9 +188,9 @@ public class CompanyService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public List<Coupon> getAllCompanyCoupons(Long companyId, String token) throws Exception {
+    public List<Coupon> getAllCompanyCoupons(String token) throws Exception {
 
-        Company company = companyRepo.findById( this.getCompanyByBearerHeader(token)).isPresent() ? companyRepo.findById(companyId).get() : null;
+        Company company = companyRepo.findById(this.getCompanyByBearerHeader(token)).isPresent() ? companyRepo.findById(this.getCompanyByBearerHeader(token)).get() : null;
         System.out.println(company);
         if (company != null) {
             return company.getCouponList();
@@ -199,9 +199,9 @@ public class CompanyService {
     }
 
     @Transactional
-    public List<Coupon> getCompanyCouponsByCategory(CategoryType categoryType, Long companyId) throws ComapnyException {
+    public List<Coupon> getCompanyCouponsByCategory(CategoryType categoryType, String header ) throws ComapnyException {
         Company company;
-        company = companyRepo.existsById(companyId) ? companyRepo.findById(companyId).get() : null;
+        company = companyRepo.existsById(this.getCompanyByBearerHeader(header)) ? companyRepo.findById(this.getCompanyByBearerHeader(header)).get() : null;
         if (company != null && company.getCouponList().size() > -1) {
             List<Coupon> coupons = company.getCouponList().stream().filter(coupon -> coupon.getCategory() == categoryType).collect(Collectors.toList());
             return coupons;
@@ -211,8 +211,8 @@ public class CompanyService {
 
 
     @Transactional
-    public List<Coupon> getCompanyCouponUpToPrice(Long maxPrice, Long companyId) {
-        return couponService.getCouponsByMaxPriceAndCompanyId(maxPrice, companyId);
+    public List<Coupon> getCompanyCouponUpToPrice(Long maxPrice, String header) {
+        return couponService.getCouponsByMaxPriceAndCompanyId(maxPrice, this.getCompanyByBearerHeader(header));
     }
 
     @Transactional

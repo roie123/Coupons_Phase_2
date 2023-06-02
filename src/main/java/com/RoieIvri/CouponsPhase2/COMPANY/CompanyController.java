@@ -34,29 +34,29 @@ public class CompanyController extends ClientController {
         return companyService.addCoupon(coupon,header);
     }
 
-    @PutMapping("/coupon/{couponId}/{companyId}")
-    public void updateCoupon(@RequestBody Coupon coupon , @PathVariable Long couponId , @PathVariable Long companyId) throws Exception {
-        companyService.updateCoupon(coupon, couponId,companyId);
+    @PutMapping("/coupon/{couponId}")
+    public void updateCoupon(@RequestBody Coupon coupon , @PathVariable Long couponId ,@RequestHeader(HttpHeaders.AUTHORIZATION) String header ) throws Exception {
+        companyService.updateCoupon(coupon, couponId,header);
     }
 
 
-    @DeleteMapping("/coupon/{id}/{companyId}")
-    public void deleteCoupon(@PathVariable Long id, @PathVariable Long companyId) throws Exception {
-        companyService.deleteCouponFromCompany(id,companyId);
+    @DeleteMapping("/coupon/{id}")
+    public void deleteCoupon(@PathVariable Long id,@RequestHeader(HttpHeaders.AUTHORIZATION) String header ) throws Exception {
+        companyService.deleteCouponFromCompany(id,header);
     }
 
-    @GetMapping("/getCoupons/{companyId}")
-    public List<Coupon> getCompanyCoupons(@PathVariable Long companyId, @RequestHeader(HttpHeaders.AUTHORIZATION) String header) throws Exception {
+    @GetMapping("/getCoupons")
+    public List<Coupon> getCompanyCoupons( @RequestHeader(HttpHeaders.AUTHORIZATION) String header) throws Exception {
 
-        return companyService.getAllCompanyCoupons(companyId,header);
+        return companyService.getAllCompanyCoupons(header);
     }
-    @GetMapping("/getCoupons/byCat/{companyId}/{category}")
-    public List<Coupon> getCompanyCouponsByCategory(@PathVariable Long companyId, @PathVariable CategoryType category) throws ComapnyException {
-        return companyService.getCompanyCouponsByCategory(category,companyId);
+    @GetMapping("/getCoupons/byCat/{category}")
+    public List<Coupon> getCompanyCouponsByCategory( @PathVariable CategoryType category,@RequestHeader(HttpHeaders.AUTHORIZATION) String header) throws ComapnyException {
+        return companyService.getCompanyCouponsByCategory(category,header);
     }
 
-    @GetMapping("/getCoupons/byMaxPrice/{companyId}/{max}")
-    public List<Coupon> getCompanyCouponsByMaxPrice(@PathVariable Long companyId , @PathVariable Long max, @RequestHeader(HttpHeaders.AUTHORIZATION) String header){
-        return companyService.getCompanyCouponUpToPrice(max,companyId);
+    @GetMapping("/getCoupons/byMaxPrice/{max}")
+    public List<Coupon> getCompanyCouponsByMaxPrice( @PathVariable Long max, @RequestHeader(HttpHeaders.AUTHORIZATION) String header){
+        return companyService.getCompanyCouponUpToPrice(max,header);
     }
 }
