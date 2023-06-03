@@ -10,6 +10,7 @@ import com.RoieIvri.CouponsPhase2.CUSTOMER.CustomerService;
 import com.RoieIvri.CouponsPhase2.SECURITY.TokenConfig;
 import com.RoieIvri.CouponsPhase2.SECURITY.TokenResponseDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -53,8 +54,10 @@ public class AdminService {
     }
 
 
-    public List<CompanyDTO> getAllCompanies() throws Exception {
-        return companyService.getAllCompaniesSecured();
+    public Page<Company> getAllCompanies(int page, int size) throws Exception {
+
+
+        return companyService.getAll(page,size);
     }
 
     public Company getSingleCompany(Long id) throws Exception {

@@ -11,6 +11,7 @@ import com.RoieIvri.CouponsPhase2.SECURITY.Authorities;
 import com.RoieIvri.CouponsPhase2.SECURITY.TokenResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.loader.LoaderLogging;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -52,9 +53,9 @@ public class AdminController extends ClientController {
 
     }
 
-    @GetMapping("/companies")
-    public List<CompanyDTO> getAllCompanies() throws Exception {
-        return adminService.getAllCompanies();
+    @GetMapping("/companies/{page}/{size}")
+    public Page<Company> getAllCompanies(@PathVariable int page , @PathVariable int size) throws Exception {
+        return adminService.getAllCompanies(page , size);
     }
 
     @GetMapping("/getCompanyById/{companyId}")

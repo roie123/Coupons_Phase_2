@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,13 +23,15 @@ import java.util.List;
 public class UserService implements UserDetailsService {
     private final CompanyService companyService;
     private final CustomerService customerService;
+    private final PasswordEncoder passwordEncoder;
     @SneakyThrows
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         System.out.println("loadUserByUsername FUNC");
-        if (username.equals("Admin@gmail.com")){
-            return new User("Admin@gmail.com","Administhebest", List.of(new SimpleGrantedAuthority(Authorities.ROLE_ADMIN.toString())));
+        System.out.println(username);
+        if (username.equals("admin")){
+            return new User("admin", this.passwordEncoder.encode("admin12345"), List.of(new SimpleGrantedAuthority(Authorities.ROLE_ADMIN.toString())));
         }
         Company company = companyService.getByEmail(username);
         System.out.println(company);

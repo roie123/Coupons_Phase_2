@@ -32,7 +32,7 @@ public class AuthService {
 
 
     private boolean isLoginDetailsValid(LoginRequestDTO loginRequestDTO) {
-        System.out.println("isLoginDetailsValid FUNC");
+        System.out.println("isLoginDetailsValid FUNC" + loginRequestDTO);
 
         try {
             this.authenticationManager.authenticate(

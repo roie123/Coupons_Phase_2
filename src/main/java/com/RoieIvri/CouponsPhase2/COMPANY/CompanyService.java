@@ -6,6 +6,9 @@ import com.RoieIvri.CouponsPhase2.COUPON.CategoryType;
 import com.RoieIvri.CouponsPhase2.SECURITY.TokenConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -250,5 +253,9 @@ public class CompanyService {
         String userNeme = tokenConfig.getUserNameFromToken(token.substring(7));
         return getByEmail(userNeme).getId();
     }
+public Page<Company> getAll(int page, int size ){
+   Pageable page1 = PageRequest.of(page,size);
 
+    return companyRepo.findAll(page1);
+}
 }

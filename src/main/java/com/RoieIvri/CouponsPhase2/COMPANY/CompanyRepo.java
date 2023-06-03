@@ -1,5 +1,7 @@
 package com.RoieIvri.CouponsPhase2.COMPANY;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.stereotype.Repository;
@@ -18,6 +20,6 @@ public interface CompanyRepo extends JpaRepository<Company,Long> {
     List<Company> getAllCompaniesDTO();
 
     public Company getByEmail(String email);
-
+     Page<Company> findAll(Pageable pageable);
 
 }
