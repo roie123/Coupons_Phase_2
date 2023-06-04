@@ -1,5 +1,8 @@
 package com.RoieIvri.CouponsPhase2.SECURITY;
 
+import com.RoieIvri.CouponsPhase2.COMPANY.CompanyService;
+import com.RoieIvri.CouponsPhase2.CUSTOMER.CustomerService;
+import com.RoieIvri.CouponsPhase2.LOGIN_MANAGER.ClientType;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.util.ToStringUtil;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,10 +23,26 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final TokenConfig tokenConfig;
 
-
+    private final CustomerService customerService;
+    private final CompanyService companyService;
     public TokenResponseDTO validateLoginDetails(LoginRequestDTO loginRequestDTO) {
+        boolean isCompatible = false;
+        switch (loginRequestDTO.getClientType()){
+
+            case Admin -> {
+                isCompatible=true;
+            }
+            case Company -> {
+                isCompatible = companyService.existByEmail(loginRequestDTO.getUserName());
+            }
+            case Customer -> {
+                isCompatible = customerService.existsBuEmail(loginRequestDTO.getUserName());
+            }
+        }
         boolean isLoginValid = this.isLoginDetailsValid(loginRequestDTO);
-        if (isLoginValid) {
+        if (isLoginValid && isCompatible) {
+            System.out.println("USER LOGIN VAILD ===>>>>    ");
+
             return new TokenResponseDTO(this.tokenConfig.generateToken(this.buildClaims(loginRequestDTO)));
         }
 
@@ -38,7 +57,8 @@ public class AuthService {
             this.authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             loginRequestDTO.getUserName(),
-                            loginRequestDTO.getPassword()
+                            loginRequestDTO.getPassword(),
+                            List.of(new SimpleGrantedAuthority(getAuthByClientType(loginRequestDTO.getClientType()).toString()))
                     )
             );
 
@@ -62,8 +82,20 @@ public class AuthService {
         claims.put("role", loginRequestDTO.getClientType());
         return claims;
     }
+    private Authorities getAuthByClientType(ClientType clientType){
+        switch (clientType){
 
-
-
+            case Admin -> {
+                return Authorities.ROLE_ADMIN;
+            }
+            case Company -> {
+                return Authorities.ROLE_COMPANY;
+            }
+            case Customer -> {
+                return Authorities.ROLE_CUSTOMER;
+            }
+        }
+        return null;
+    }
 
 }

@@ -21,5 +21,5 @@ public interface CompanyRepo extends JpaRepository<Company,Long> {
 
     public Company getByEmail(String email);
      Page<Company> findAll(Pageable pageable);
-
+boolean existsByEmail(String email);
 }

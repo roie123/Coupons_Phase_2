@@ -258,4 +258,12 @@ public Page<Company> getAll(int page, int size ){
 
     return companyRepo.findAll(page1);
 }
+
+
+
+
+public boolean existByEmail(String email){
+        return companyRepo.existsByEmail(email);
+
+}
 }

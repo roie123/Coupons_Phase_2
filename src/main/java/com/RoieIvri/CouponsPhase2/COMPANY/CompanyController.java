@@ -15,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Secured({"ROLE_COMPANY"})
 @RequestMapping("/api/company")
+@CrossOrigin
 public class CompanyController extends ClientController {
 
 

@@ -22,7 +22,7 @@ public class TokenConfig {
         return Jwts.builder()
                 .addClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 60 * 1000 * 30))
+                .setExpiration(new Date(System.currentTimeMillis() + 60 * 1000 * 60))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }

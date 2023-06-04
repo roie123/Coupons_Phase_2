@@ -120,14 +120,16 @@ public class CustomerService {
 
             if (customer != null && customer.getCoupons().size() > -1 && couponService.existById(couponId)) {
                 Coupon coupon = couponService.getOneObject(couponId);
-
-
-                LocalDate localDate = LocalDate.now();
-                if (coupon.getEndDate().isBefore(localDate)) {
-                    throw new CustomerException(CustomerExceptionTypes.CANT_PURCHASE_OUT_OF_DATE_COUPON);
-                }
-                customer.getCoupons().add(coupon);
-                updateObject(customer, customer.getId());
+//
+//
+//                LocalDate localDate = LocalDate.now();
+//                if (coupon.getEndDate().isBefore(localDate)) {
+//                    throw new CustomerException(CustomerExceptionTypes.CANT_PURCHASE_OUT_OF_DATE_COUPON);
+//                }
+                List<Coupon> coupons = customer.getCoupons();
+                coupons.add(coupon);
+//                customer.setCoupons(coupons);
+//                updateObject(customer, customer.getId());
                 return couponId;
             }
 
@@ -200,5 +202,7 @@ public class CustomerService {
         String userName = tokenConfig.getUserNameFromToken(token.substring(7));
         return getByEmail(userName);
     }
-
+public boolean existsBuEmail(String email){
+        return customerRepo.existsByEmail(email);
+}
 }
