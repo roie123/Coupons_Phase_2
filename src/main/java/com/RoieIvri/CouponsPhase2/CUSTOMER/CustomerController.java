@@ -47,10 +47,13 @@ public class CustomerController extends ClientController {
     }
 
     @GetMapping("/coupons/available")
-    public List<Coupon> getAllCouponsAvailable(){
-        return customerService.getAvailableCouponsToPurchase();
+    public List<Coupon> getAllCouponsAvailable(@RequestHeader(HttpHeaders.AUTHORIZATION) String header){
+        return customerService.getAvailableCouponsToPurchase(header);
     }
 
-
+    @GetMapping
+    public  CustomerDTO getMyDetails(@RequestHeader(HttpHeaders.AUTHORIZATION) String header) throws CustomerException {
+        return customerService.getMyDetails(header);
+    }
 
 }

@@ -114,19 +114,20 @@ public class CompanyService {
     }
 
     @Transactional
-    public boolean addCoupon(Coupon coupon, String token) throws Exception {
-        System.out.println("add Coupon func");
-        Company company = companyRepo.findById(getCompanyByBearerHeader(token)).orElseThrow();
+    public Long addCoupon(Coupon coupon, String token) throws Exception {
+        Company company = companyRepo.findById(getCompanyIdByBearerHeader(token)).orElseThrow();
 
         if (!couponService.isCouponExistByTitleAndCompanyId(coupon.getTitle(), company.getId())) {
 
             if (coupon.getEndDate().isBefore(LocalDate.now())) {
                 throw new ComapnyException(CompanyExceptionTypes.INVALID_COUPON_VALUES);
             }
-            company.getCouponList().add(coupon);
-            coupon.setCompany(company);
+            Coupon couponFromDb= couponService.addObject(coupon);
+
+            company.getCouponList().add(couponFromDb);
+            couponFromDb.setCompany(company);
             updateObject(company, company.getId());
-            return true;
+            return couponFromDb.getId();
 
         } else throw new ComapnyException(CompanyExceptionTypes.COUPON_ALREADY_EXIST);
 
@@ -137,7 +138,7 @@ public class CompanyService {
     public void updateCoupon(Coupon coupon, Long couponId, String token) throws Exception {
         if (couponService.getOneObject(couponId) != null) {
             coupon.setId(couponId);
-            coupon.setCompany(companyRepo.findById(this.getCompanyByBearerHeader(token)).get());
+            coupon.setCompany(companyRepo.findById(this.getCompanyIdByBearerHeader(token)).get());
             couponService.updateObject(coupon, couponId);
             return;
 
@@ -147,7 +148,7 @@ public class CompanyService {
 
     @Transactional
     public void deleteCouponFromCompany(Long couponId, String token) throws Exception {
-        Long companyId = this.getCompanyByBearerHeader(token);
+        Long companyId = this.getCompanyIdByBearerHeader(token);
         if (companyHasCoupon(companyId, couponId)) {
             Company company = companyRepo.findById(companyId).get();
             company.getCouponList().removeIf(c -> c.getId().longValue() == couponId.longValue());
@@ -183,7 +184,7 @@ public class CompanyService {
     @Transactional(propagation = Propagation.REQUIRED)
     public List<Coupon> getAllCompanyCoupons(String token) throws Exception {
 
-        Company company = companyRepo.findById(this.getCompanyByBearerHeader(token)).isPresent() ? companyRepo.findById(this.getCompanyByBearerHeader(token)).get() : null;
+        Company company = companyRepo.findById(this.getCompanyIdByBearerHeader(token)).isPresent() ? companyRepo.findById(this.getCompanyIdByBearerHeader(token)).get() : null;
         System.out.println(company);
         if (company != null) {
             return company.getCouponList();
@@ -194,7 +195,7 @@ public class CompanyService {
     @Transactional
     public List<Coupon> getCompanyCouponsByCategory(CategoryType categoryType, String header ) throws ComapnyException {
         Company company;
-        company = companyRepo.existsById(this.getCompanyByBearerHeader(header)) ? companyRepo.findById(this.getCompanyByBearerHeader(header)).get() : null;
+        company = companyRepo.existsById(this.getCompanyIdByBearerHeader(header)) ? companyRepo.findById(this.getCompanyIdByBearerHeader(header)).get() : null;
         if (company != null && company.getCouponList().size() > -1) {
             List<Coupon> coupons = company.getCouponList().stream().filter(coupon -> coupon.getCategory() == categoryType).collect(Collectors.toList());
             return coupons;
@@ -205,7 +206,7 @@ public class CompanyService {
 
     @Transactional
     public List<Coupon> getCompanyCouponUpToPrice(Long maxPrice, String header) {
-        return couponService.getCouponsByMaxPriceAndCompanyId(maxPrice, this.getCompanyByBearerHeader(header));
+        return couponService.getCouponsByMaxPriceAndCompanyId(maxPrice, this.getCompanyIdByBearerHeader(header));
     }
 
     @Transactional
@@ -245,14 +246,16 @@ public class CompanyService {
     }
 
 
-    private Long getCompanyByBearerHeader(String token) {
-//        token = "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjpbeyJhdXRob3JpdHkiOiJST0xFX0NPTVBBTlkifV0sInVzZXJOYW1lIjoiZHNkYXNhc2FzZ2hqY3Zhc3NhQGdtYXNpbC5jb20iLCJpYXQiOjE2ODU2MzY0MTksImV4cCI6MTY4NTYzODIxOX0.qeHwY619uLuWk7K1sgIfkUUiaukhQPBcYk7QSA0xh8g";
-//        System.out.println(tokenConfig.getUserNameFromToken(token));
-//        System.out.println(token.substring(7,token.length()-1));
-//        System.out.println(token.substring(7,token.length()).equals("eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjpbeyJhdXRob3JpdHkiOiJST0xFX0NPTVBBTlkifV0sInVzZXJOYW1lIjoiZHNkYXNhc2FzZ2hqY3Zhc3NhQGdtYXNpbC5jb20iLCJpYXQiOjE2ODU2MzY0MTksImV4cCI6MTY4NTYzODIxOX0.qeHwY619uLuWk7K1sgIfkUUiaukhQPBcYk7QSA0xh8g"));
-        String userNeme = tokenConfig.getUserNameFromToken(token.substring(7));
+    private Long getCompanyIdByBearerHeader(String token) {
+     String userNeme = tokenConfig.getUserNameFromToken(token.substring(7));
         return getByEmail(userNeme).getId();
     }
+    private Company getCompanyByBearerHeader(String token) {
+       String userNeme = tokenConfig.getUserNameFromToken(token.substring(7));
+        return getByEmail(userNeme);
+    }
+
+
 public Page<Company> getAll(int page, int size ){
    Pageable page1 = PageRequest.of(page,size);
 
@@ -266,4 +269,10 @@ public boolean existByEmail(String email){
         return companyRepo.existsByEmail(email);
 
 }
+
+    public CompanyDTO getMyDetails(String header) {
+        Company company = this.getCompanyByBearerHeader(header);
+        return conversionService.convert(company,CompanyDTO.class);
+
+    }
 }

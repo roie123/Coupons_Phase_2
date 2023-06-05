@@ -29,7 +29,7 @@ public class CompanyController extends ClientController {
 
 
     @PostMapping("/coupon")
-    public boolean addNewCoupon(@RequestBody Coupon coupon , @RequestHeader(HttpHeaders.AUTHORIZATION) String header) throws Exception {
+    public Long addNewCoupon(@RequestBody Coupon coupon , @RequestHeader(HttpHeaders.AUTHORIZATION) String header) throws Exception {
         return companyService.addCoupon(coupon,header);
     }
 
@@ -57,5 +57,11 @@ public class CompanyController extends ClientController {
     @GetMapping("/getCoupons/byMaxPrice/{max}")
     public List<Coupon> getCompanyCouponsByMaxPrice( @PathVariable Long max, @RequestHeader(HttpHeaders.AUTHORIZATION) String header){
         return companyService.getCompanyCouponUpToPrice(max,header);
+    }
+
+    @GetMapping()
+    public CompanyDTO getMyDetails(@RequestHeader(HttpHeaders.AUTHORIZATION) String header){
+        return companyService.getMyDetails(header);
+
     }
 }

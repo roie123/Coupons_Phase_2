@@ -120,16 +120,10 @@ public class CustomerService {
 
             if (customer != null && customer.getCoupons().size() > -1 && couponService.existById(couponId)) {
                 Coupon coupon = couponService.getOneObject(couponId);
-//
-//
-//                LocalDate localDate = LocalDate.now();
-//                if (coupon.getEndDate().isBefore(localDate)) {
-//                    throw new CustomerException(CustomerExceptionTypes.CANT_PURCHASE_OUT_OF_DATE_COUPON);
-//                }
+
                 List<Coupon> coupons = customer.getCoupons();
                 coupons.add(coupon);
-//                customer.setCoupons(coupons);
-//                updateObject(customer, customer.getId());
+                coupon.setAmount(coupon.getAmount() - 1);
                 return couponId;
             }
 
@@ -158,7 +152,7 @@ public class CustomerService {
 
     }
 
-    public List<Coupon> getCustomerCouponsByCategory(String  header, CategoryType categoryType) {
+    public List<Coupon> getCustomerCouponsByCategory(String header, CategoryType categoryType) {
         return couponService.getCustomerCouponsByCategory(this.getCustomerByToken(header).getId(), categoryType);
     }
 
@@ -185,9 +179,10 @@ public class CustomerService {
     }
 
 
-    public List<Coupon> getAvailableCouponsToPurchase() {
+    public List<Coupon> getAvailableCouponsToPurchase(String header) {
+        Customer customer = getCustomerByToken(header);
 
-        return couponService.getAvailableCoupons();
+        return couponService.getAvailableCouponsForCustomer(customer.getId());
 
 
     }
@@ -202,7 +197,19 @@ public class CustomerService {
         String userName = tokenConfig.getUserNameFromToken(token.substring(7));
         return getByEmail(userName);
     }
-public boolean existsBuEmail(String email){
+
+    public boolean existsBuEmail(String email) {
         return customerRepo.existsByEmail(email);
-}
+    }
+
+    public CustomerDTO getMyDetails(String header) throws CustomerException {
+        Customer customer = getCustomerByToken(header);
+
+        if (customer != null) {
+            return conversionService.convert(customer, CustomerDTO.class);
+        } else {
+            throw new CustomerException(CustomerExceptionTypes.CUSTOMER_NOT_FOUND_BY_ID);
+        }
+
+    }
 }

@@ -3,7 +3,9 @@ package com.RoieIvri.CouponsPhase2.COUPON;
 import com.RoieIvri.CouponsPhase2.COMPANY.Company;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -39,4 +41,14 @@ public interface CouponRepo extends JpaRepository<Coupon,Long> {
 
     @Procedure("deleteOutdatedAndNullCoupons")
     void deleteAllNullAndOutDatedCoupons();
+
+
+
+
+    @Query("SELECT c FROM Coupon c " +
+            "LEFT JOIN Customer customers " +
+            "WHERE c.amount > 1 " +
+            "AND c.endDate < :today " +
+            "AND (customers IS NULL OR customers.id <> :customerId)")
+    List<Coupon> findValidCouponsForCustomer(@Param("customerId") Long customerId, @Param("today") LocalDate today);
 }

@@ -107,5 +107,11 @@ public class CouponService {
         Pageable page1 = PageRequest.of(page,size);
         return couponRepo.getAllByAmountIsGreaterThanAndEndDateIsBefore(0,LocalDate.now(),page1);
     }
+
+
+
+    public List<Coupon> getAvailableCouponsForCustomer(Long customerId) {
+        return couponRepo.findValidCouponsForCustomer(customerId, LocalDate.now());
+    }
 }
 
