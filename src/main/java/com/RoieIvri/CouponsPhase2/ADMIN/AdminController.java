@@ -36,7 +36,6 @@ public class AdminController extends ClientController {
 
     @PostMapping()
     public TokenResponseDTO addCompany(@RequestBody Company company ) throws Exception {
-        System.out.println(company);
         return adminService.addCompany(company);
 
 
@@ -67,7 +66,7 @@ public class AdminController extends ClientController {
 
 
     @PostMapping("/customer")
-    public TokenResponseDTO addNewCustomer(@RequestBody Customer customer) throws Exception {
+    public Long addNewCustomer(@RequestBody Customer customer ) throws Exception {
         return adminService.addNewCustomer(customer);
     }
 

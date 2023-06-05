@@ -28,7 +28,7 @@ public class AuthController {
     }
 
     @PostMapping("/registration/customer")
-    public TokenResponseDTO registration(@RequestBody Customer customer) throws Exception {
+    public Long registration(@RequestBody Customer customer) throws Exception {
         return this.adminService.addNewCustomer(customer);
     }
 

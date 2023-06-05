@@ -11,6 +11,7 @@ import com.RoieIvri.CouponsPhase2.SECURITY.TokenConfig;
 import com.RoieIvri.CouponsPhase2.SECURITY.TokenResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -27,6 +28,7 @@ public class AdminService {
     private final CustomerService customerService;
 
     private final TokenConfig tokenConfig;
+    private final PasswordEncoder passwordEncoder;
 
     public boolean isLoginValid(String email,String password){
         if (email.equals("admin@admin.com") && password.equals("admin")){
@@ -39,6 +41,8 @@ public class AdminService {
 
     public TokenResponseDTO addCompany(Company company ) throws Exception {
     if (companyService.isCompanyValidToBeAdded(company)){
+            company.setPassword(passwordEncoder.encode(company.getPassword()));
+
          Company company1=  companyService.addObject(company);
         String token = this.tokenConfig.generateToken(this.buildClaimsForCompany(company1));
         return new TokenResponseDTO(token);
@@ -63,11 +67,11 @@ public class AdminService {
     public Company getSingleCompany(Long id) throws Exception {
         return companyService.getOneObject(id);
     }
-    public TokenResponseDTO addNewCustomer(Customer customer) throws Exception {
+    public Long addNewCustomer(Customer customer) throws Exception {
         Customer customer1 = customerService.addObject(customer);
 
-        String token = this.tokenConfig.generateToken(this.buildClaimsForCustomer(customer1));
-        return new TokenResponseDTO(token);
+//        String token = this.tokenConfig.generateToken(this.buildClaimsForCustomer(customer1));
+        return customer1.getId();
 
     }
     public void deleteCustomer(Long objectId) throws Exception {
