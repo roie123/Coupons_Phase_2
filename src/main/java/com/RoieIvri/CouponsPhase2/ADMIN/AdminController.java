@@ -11,10 +11,13 @@ import com.RoieIvri.CouponsPhase2.SECURITY.Authorities;
 import com.RoieIvri.CouponsPhase2.SECURITY.TokenResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.loader.LoaderLogging;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
@@ -83,6 +86,10 @@ public class AdminController extends ClientController {
     @GetMapping("/customer")
     public List<CustomerDTO> getAll() throws Exception {
         return customerService.getAllObjects();
+    }
+    @GetMapping("/customer/byPage/{page}")
+    public List<CustomerDTO> getAll(@PathVariable int page ) throws Exception {
+        return customerService.getAllCustomersPages(page);
     }
 
     @GetMapping("/customer/{customerId}")

@@ -8,11 +8,13 @@ import com.RoieIvri.CouponsPhase2.SECURITY.SecurityException;
 import com.RoieIvri.CouponsPhase2.SECURITY.SecurityExceptionType;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
+@CrossOrigin
 public class ControllerAdvice {
 
 

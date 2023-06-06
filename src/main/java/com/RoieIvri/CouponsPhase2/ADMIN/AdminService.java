@@ -1,11 +1,10 @@
 package com.RoieIvri.CouponsPhase2.ADMIN;
 
-import com.RoieIvri.CouponsPhase2.COMPANY.Company;
-import com.RoieIvri.CouponsPhase2.COMPANY.CompanyDTO;
-import com.RoieIvri.CouponsPhase2.COMPANY.CompanyService;
+import com.RoieIvri.CouponsPhase2.COMPANY.*;
 import com.RoieIvri.CouponsPhase2.COUPON.CouponService;
 import com.RoieIvri.CouponsPhase2.CUSTOMER.Customer;
 import com.RoieIvri.CouponsPhase2.CUSTOMER.CustomerDTO;
+import com.RoieIvri.CouponsPhase2.CUSTOMER.CustomerException;
 import com.RoieIvri.CouponsPhase2.CUSTOMER.CustomerService;
 import com.RoieIvri.CouponsPhase2.SECURITY.TokenConfig;
 import com.RoieIvri.CouponsPhase2.SECURITY.TokenResponseDTO;
@@ -47,7 +46,7 @@ public class AdminService {
         String token = this.tokenConfig.generateToken(this.buildClaimsForCompany(company1));
         return new TokenResponseDTO(token);
     }
-    else throw new AdminException("COMPANY COULD NOT BE ADDED :: NOT VALID VALUES");
+    else throw new AdminException("Company Could Not Be Added  , Not Valid Values");
     }
     public void updateCompany(Company company,Long companyId) throws Exception {
          companyService.updateObject(company,companyId);
@@ -65,7 +64,11 @@ public class AdminService {
     }
 
     public Company getSingleCompany(Long id) throws Exception {
-        return companyService.getOneObject(id);
+        Company company=  companyService.getOneObject(id);
+        if (company==null){
+            throw new ComapnyException(CompanyExceptionTypes.COMPANY_NOT_FOUND_BY_ID);
+        }
+        return company;
     }
     public Long addNewCustomer(Customer customer) throws Exception {
         Customer customer1 = customerService.addObject(customer);

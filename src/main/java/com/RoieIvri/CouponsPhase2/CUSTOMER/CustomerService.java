@@ -10,10 +10,13 @@ import com.RoieIvri.CouponsPhase2.SECURITY.TokenConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.management.LockInfo;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +43,7 @@ public class CustomerService {
 
     public Customer addObject(Customer customer) throws Exception {
         if (customerRepo.existsByEmail(customer.getEmail())) {
-            throw new CustomerException(CustomerExceptionTypes.CUSTOMER_VALUES_NOT_VALID);
+            throw new CustomerException(CustomerExceptionTypes.CUSTOMER_ALREADY_EXIST);
         } else {
 
             customer.setPassword(passwordEncoder.encode(customer.getPassword()));
@@ -65,6 +68,9 @@ public class CustomerService {
     }
 
     public void deleteObject(Long objectId) throws Exception {
+        if (!customerRepo.existsById(objectId)){
+            throw new CustomerException(CustomerExceptionTypes.CUSTOMER_NOT_FOUND_BY_ID);
+        }
         customerRepo.deleteById(objectId);
     }
 
@@ -73,6 +79,16 @@ public class CustomerService {
 
         List<CustomerDTO> customerDTOS = new ArrayList<>();
         customerRepo.getAllSecured().forEach(customer -> {
+            customerDTOS.add(conversionService.convert(customer, CustomerDTO.class));
+        });
+        return customerDTOS;
+    }
+    @Transactional
+    public List<CustomerDTO> getAllCustomersPages(int page) throws Exception {
+        Pageable page1 = PageRequest.of(page,10);
+
+        List<CustomerDTO> customerDTOS = new ArrayList<>();
+        customerRepo.findAll(page1).forEach(customer -> {
             customerDTOS.add(conversionService.convert(customer, CustomerDTO.class));
         });
         return customerDTOS;

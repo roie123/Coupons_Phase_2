@@ -1,6 +1,9 @@
 package com.RoieIvri.CouponsPhase2.CUSTOMER;
 
+import com.RoieIvri.CouponsPhase2.COMPANY.Company;
 import com.RoieIvri.CouponsPhase2.COUPON.Coupon;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;
@@ -20,6 +23,9 @@ public interface CustomerRepo extends JpaRepository<Customer,Long> {
 
     @Procedure("getAllCustomersSecured")
     List<Customer> getAllSecured();
+
+    Page<Customer> findAll(Pageable pageable);
+
 
     @Query("SELECT CASE WHEN COUNT(c) > 0 THEN TRUE ELSE FALSE END FROM Customer c JOIN c.coupons co WHERE co.id = :couponId AND c.id = :customerId")
     boolean existsCustomerCoupon(@Param("customerId") Long customerId, @Param("couponId") Long couponId);

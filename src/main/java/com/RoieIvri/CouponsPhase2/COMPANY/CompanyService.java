@@ -120,7 +120,7 @@ public class CompanyService {
         if (!couponService.isCouponExistByTitleAndCompanyId(coupon.getTitle(), company.getId())) {
 
             if (coupon.getEndDate().isBefore(LocalDate.now())) {
-                throw new ComapnyException(CompanyExceptionTypes.INVALID_COUPON_VALUES);
+                throw new ComapnyException(CompanyExceptionTypes.DatesInvalid);
             }
             Coupon couponFromDb= couponService.addObject(coupon);
 

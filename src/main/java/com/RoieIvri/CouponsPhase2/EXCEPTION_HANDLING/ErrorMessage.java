@@ -1,10 +1,9 @@
 package com.RoieIvri.CouponsPhase2.EXCEPTION_HANDLING;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
+@Getter@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ErrorMessage {

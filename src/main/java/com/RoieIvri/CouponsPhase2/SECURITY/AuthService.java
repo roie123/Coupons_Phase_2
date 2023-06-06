@@ -30,7 +30,7 @@ public class AuthService {
         switch (loginRequestDTO.getClientType()){
 
             case Admin -> {
-                isCompatible=true;
+                isCompatible= loginRequestDTO.getUserName().equals("admin") && loginRequestDTO.getPassword().equals("admin12345")  ;
             }
             case Company -> {
                 isCompatible = companyService.existByEmail(loginRequestDTO.getUserName());
