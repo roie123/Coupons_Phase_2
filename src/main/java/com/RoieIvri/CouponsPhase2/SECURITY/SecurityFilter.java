@@ -35,10 +35,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             return;
         }
         final String token = tokenHeader.substring(7);
-        System.out.println(token);
         String userName = this.tokenConfig.getUserNameFromToken(token);
-        System.out.println(userName);
-
         if (userName != null) {
             boolean isTokenExpirationValid = this.tokenConfig.isExpirationToken(token);
             if (isTokenExpirationValid) {
