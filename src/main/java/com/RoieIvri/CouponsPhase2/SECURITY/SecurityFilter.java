@@ -40,22 +40,17 @@ public class SecurityFilter extends OncePerRequestFilter {
             boolean isTokenExpirationValid = this.tokenConfig.isExpirationToken(token);
             if (isTokenExpirationValid) {
                 UserDetails userDetails = this.userService.loadUserByUsername(userName);
-                System.out.println("Request User Details " + userDetails);
 
-                if (userDetails== null){
-                    throw new SecurityException(SecurityExceptionType.EmailNotFound.toString());
-                }
 
 
                 if (userDetails != null) {
                     UsernamePasswordAuthenticationToken authentication
                             = new UsernamePasswordAuthenticationToken(
                             userDetails,
-                            null,
+                            userDetails.getPassword(),
                             userDetails.getAuthorities()
                     );
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                    System.out.println(authentication.getAuthorities());
                 }
             }
         }
